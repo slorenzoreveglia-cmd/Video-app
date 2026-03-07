@@ -3,99 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Vault Cloud - Test</title>
+    <title>Video Vault Pro</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; text-align: center; padding: 20px; }
-        .container { max-width: 500px; margin: auto; }
-        .video-card { background: #1e1e1e; margin: 20px 0; padding: 15px; border-radius: 12px; border: 1px solid #333; }
-        video { width: 100%; border-radius: 8px; background: black; }
-        button { background: #059669; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1em; }
-        button:active { transform: scale(0.98); }
-        #status-msg { color: #aaa; margin-top: 15px; font-style: italic; }
-        .delete-btn { background: #dc2626; padding: 5px 10px; font-size: 0.8em; margin-top: 10px; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; margin: 0; }
+        .container { max-width: 600px; margin: auto; }
+        .box { background: #1e293b; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        input { padding: 12px; width: 80%; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
+        button { background: #3b82f6; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 5px; }
+        button.secondary { background: #64748b; font-size: 0.8em; }
+        .video-item { background: #334155; margin: 10px 0; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
+        .video-item:hover { background: #475569; }
+        .video-name { font-weight: 500; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-grow: 1; }
+        video { width: 100%; border-radius: 10px; margin-top: 10px; display: none; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>📂 Cloud Video Test</h1>
-        <p>Se vedi questa pagina su Netlify, la pubblicazione è riuscita!</p>
-        
-        <button id="upload-btn">➕ Carica un Video</button>
-        <p id="status-msg">In attesa di azioni...</p>
-        
-        <hr style="border: 0; border-top: 1px solid #333; margin: 30px 0;">
-        
-        <div id="video-list"></div>
+        <div id="set-pin-screen" class="box hidden">
+            <h2>🆕 Crea il tuo PIN</h2>
+            <p>Scegli un codice per proteggere i tuoi video</p>
+            <input type="tel" id="new-pin" placeholder="Nuovo PIN">
+            <br>
+            <button onclick="salvaNuovoPin()">Salva PIN</button>
+        </div>
+
+        <div id="login-screen" class="box hidden">
+            <h2>🔐 Video Vault</h2>
+            <input type="tel" id="pin-field" placeholder="Inserisci PIN">
+            <br>
+            <button onclick="validaPin()">Entra</button>
+        </div>
+
+        <div id="main-app" class="hidden">
+            <div class="box">
+                <h2>📂 I Miei Video</h2>
+                <button id="upload-btn" style="background: #10b981;">➕ Carica Video</button>
+                <br>
+                <button class="secondary" onclick="mostraCambioPin()">⚙️ Cambia PIN</button>
+            </div>
+            
+            <div id="gallery"></div>
+        </div>
     </div>
 
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 
     <script>
-        // I TUOI DATI CLOUDINARY
         const CLOUD_NAME = "dcsvok2jp"; 
-        const UPLOAD_PRESET = "video_app_preset";
+        const PRESET = "video_app_preset";
 
-        // Recupero video dal browser
-        let savedVideos = JSON.parse(localStorage.getItem('myVideos')) || [];
-
-        // Configurazione del Widget
-        const myWidget = cloudinary.createUploadWidget({
-            cloudName: CLOUD_NAME, 
-            uploadPreset: UPLOAD_PRESET,
-            resourceType: "video",
-            sources: ["local", "camera"],
-            multiple: false
-        }, (error, result) => { 
-            if (error) {
-                document.getElementById('status-msg').innerText = "Errore Cloudinary: " + error.message;
+        // Gestione Avvio (Controllo se esiste un PIN)
+        window.onload = function() {
+            if (!localStorage.getItem('user_pin')) {
+                document.getElementById('set-pin-screen').classList.remove('hidden');
+            } else {
+                document.getElementById('login-screen').classList.remove('hidden');
             }
-            if (!error && result && result.event === "success") { 
-                document.getElementById('status-msg').innerText = "Caricamento completato!";
-                savedVideos.push(result.info.secure_url);
-                localStorage.setItem('myVideos', JSON.stringify(savedVideos));
-                renderVideos();
+        };
+
+        function salvaNuovoPin() {
+            const val = document.getElementById('new-pin').value.trim();
+            if (val.length >= 4) {
+                localStorage.setItem('user_pin', val);
+                location.reload();
+            } else { alert("Il PIN deve essere di almeno 4 cifre"); }
+        }
+
+        function validaPin() {
+            const input = document.getElementById('pin-field').value.trim();
+            if (input === localStorage.getItem('user_pin')) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                renderizzaLista();
+            } else { alert("PIN Errato!"); }
+        }
+
+        function mostraCambioPin() {
+            if(confirm("Vuoi cambiare il tuo PIN attuale?")) {
+                localStorage.removeItem('user_pin');
+                location.reload();
+            }
+        }
+
+        // Widget Cloudinary
+        const widget = cloudinary.createUploadWidget({
+            cloudName: CLOUD_NAME, uploadPreset: PRESET, resourceType: "video"
+        }, (err, res) => {
+            if (res && res.event === "success") {
+                let vids = JSON.parse(localStorage.getItem('vids') || "[]");
+                // Salviamo URL e Nome originale
+                vids.push({
+                    url: res.info.secure_url,
+                    name: res.info.original_filename || "Video senza nome"
+                });
+                localStorage.setItem('vids', JSON.stringify(vids));
+                renderizzaLista();
             }
         });
 
-        // Bottone Carica
-        document.getElementById("upload-btn").addEventListener("click", () => {
-            document.getElementById('status-msg').innerText = "Apertura finestra... (controlla i pop-up)";
-            myWidget.open();
-        });
+        document.getElementById("upload-btn").onclick = () => widget.open();
 
-        // Funzione per mostrare i video e tasto cancella
-        function renderVideos() {
-            const list = document.getElementById('video-list');
-            list.innerHTML = "";
-            
-            if (savedVideos.length === 0) {
-                list.innerHTML = "<p style='color:#666'>Nessun video caricato.</p>";
-            }
+        function renderizzaLista() {
+            const container = document.getElementById('gallery');
+            const vids = JSON.parse(localStorage.getItem('vids') || "[]");
+            container.innerHTML = "";
 
-            savedVideos.slice().reverse().forEach((url, index) => {
-                const realIndex = savedVideos.length - 1 - index;
+            vids.slice().reverse().forEach((video, index) => {
                 const div = document.createElement('div');
-                div.className = 'video-card';
+                div.className = 'box'; // Ogni video nel suo box
                 div.innerHTML = `
-                    <video controls src="${url}"></video>
-                    <br>
-                    <button class="delete-btn" onclick="deleteVideo(${realIndex})">Elimina dalla lista</button>
+                    <div class="video-item" onclick="toggleVideo(${index})">
+                        <span class="video-name">🎬 ${video.name}</span>
+                        <span>▼</span>
+                    </div>
+                    <video id="vid-${index}" controls src="${video.url}"></video>
                 `;
-                list.appendChild(div);
+                container.appendChild(div);
             });
         }
 
-        function deleteVideo(index) {
-            if(confirm("Vuoi rimuovere questo video dalla lista locale?")) {
-                savedVideos.splice(index, 1);
-                localStorage.setItem('myVideos', JSON.stringify(savedVideos));
-                renderVideos();
-            }
+        function toggleVideo(index) {
+            const v = document.getElementById(`vid-${index}`);
+            v.style.display = (v.style.display === 'block') ? 'none' : 'block';
         }
-
-        // Mostra i video al caricamento
-        renderVideos();
     </script>
 </body>
 </html>
