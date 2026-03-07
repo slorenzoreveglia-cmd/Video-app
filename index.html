@@ -5,81 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Steven Universe Vault</title>
     <style>
-        /* TEMA GENERALE (Sfondo Pepinillo dopo il login) */
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #1a1a1a; color: white; margin: 0; padding: 15px; transition: background 0.5s; }
+        /* TEMA VERDE PASTELLO SALVIA - ESTREMA MORBIDEZZA */
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #1a1a1a; color: #4b6337; margin: 0; padding: 15px; transition: 0.5s; }
         
-        /* TEMA PEPINILLO (Si attiva dopo il login) */
-        /* Colore esatto Pepinillo estratto: #5e803c */
-        body.logged-in { background: #5e803c; color: white; }
+        /* Sfondo post-login: un verde nebbia quasi bianco */
+        body.logged-in { background: #f4f7f0; }
 
         .container { max-width: 600px; margin: auto; }
-        .box { background: #fafafa; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-bottom: 20px; color: #333; border: 1px solid #e0e0e0; }
         
-        /* LOGIN & PIN (Look scuro) */
-        .login-box { background: #262626; color: white; border: 1px solid #444; text-align: center; margin-top: 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
-        .login-box h2 { color: white; }
-        input { padding: 15px; width: 85%; border-radius: 10px; border: 1px solid #444; margin: 15px 0; font-size: 18px; text-align: center; background: #333; color: white; }
-        input:focus { outline: none; border-color: #81c784; box-shadow: 0 0 10px rgba(129, 199, 132, 0.5); }
-        button.primary-btn { background: #5e803c; color: white; border: none; padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1.1em; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        button.primary-btn:hover { background: #6f964a; transform: translateY(-2px); }
-        button.primary-btn:active { transform: translateY(0); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        /* Box bianchi con ombra leggerissima */
+        .box { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); margin-bottom: 20px; border: 1px solid #e0ebd5; }
+        
+        .login-box { background: #2c2c2c; color: white; text-align: center; margin-top: 50px; border: none; }
+        input { padding: 15px; width: 85%; border-radius: 12px; border: 1px solid #ddd; margin: 15px 0; font-size: 18px; text-align: center; outline: none; }
+        
+        /* Tasto verde salvia pastello */
+        button.primary-btn { background: #b0c994; color: white; border: none; padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1em; }
+        button.primary-btn:hover { background: #a1ba85; }
 
-        /* HEADER & INFO */
-        .info-panel { background: #f1f8e9; border-left: 6px solid #5e803c; text-align: left; pointer-events: none; font-size: 0.95em; }
-        .info-panel h2 { margin-top: 0; color: #3d5a28; font-size: 1.3em; margin-bottom: 10px; }
-        .info-panel p { margin: 8px 0; color: #555; }
+        .info-panel { border-left: 5px solid #b0c994; }
+        .info-panel h2 { color: #6b8254; margin: 0 0 10px 0; font-size: 1.1em; }
+        .info-panel p { font-size: 0.9em; margin: 5px 0; color: #7a8a6d; }
 
-        /* TASTI SERVIZIO */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .btn-tiny { background: rgba(255,255,255,0.8); color: #3d5a28; font-size: 12px; padding: 6px 12px; opacity: 0.8; border: none; border-radius: 20px; cursor: pointer; transition: 0.2s; font-weight: 500; }
-        .btn-tiny:hover { opacity: 1; background: rgba(255,255,255,1); transform: scale(1.05); }
+        .top-bar { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .btn-tiny { background: #e8f0df; color: #6b8254; font-size: 11px; padding: 7px 15px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
 
-        /* FISARMONICA STAGIONI */
-        .season-tab { background: #fdfdfd; color: #3d5a28; padding: 18px; border-radius: 12px; margin-top: 10px; cursor: pointer; font-weight: bold; text-align: left; display: flex; justify-content: space-between; border: 1px solid #eee; transition: 0.2s; }
-        .season-tab:hover { background: #f5f5f5; border-color: #ddd; }
-        .episode-list { display: none; background: #fdfdfd; padding: 10px; border-radius: 0 0 12px 12px; border: 1px solid #eee; border-top: none; margin-bottom: 10px; }
-        .episode-item { padding: 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; font-size: 0.95em; text-align: left; transition: 0.2s; color: #444; }
-        .episode-item:last-child { border-bottom: none; }
-        .episode-item:hover { background: #f1f8e9; border-radius: 6px; color: #3d5a28; }
+        /* LISTA EPISODI */
+        .season-tab { background: #ffffff; color: #6b8254; padding: 18px; border-radius: 15px; margin-top: 10px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; border: 1px solid #e0ebd5; transition: 0.2s; }
+        .season-tab:hover { background: #fafdf8; }
+        
+        .episode-list { display: none; background: #ffffff; padding: 5px; border-radius: 0 0 15px 15px; border: 1px solid #e0ebd5; border-top: none; }
+        .episode-item { padding: 15px; border-bottom: 1px solid #f4f7f0; cursor: pointer; color: #4b6337; font-size: 0.95em; text-align: left; }
+        .episode-item:hover { background: #fafff7; }
 
-        video { width: 100%; border-radius: 12px; margin-top: 15px; display: none; background: #000; box-shadow: 0 8px 20px rgba(0,0,0,0.3); border: 1px solid #eee; }
-
-        /* RESPONSIVE TELEFONO */
-        @media (max-width: 480px) {
-            .container { padding: 5px; }
-            .box { padding: 20px; }
-            .login-box { margin-top: 30px; }
-            input { font-size: 16px; padding: 12px; }
-            .season-tab { padding: 15px; font-size: 0.9em; }
-        }
+        video { width: 100%; border-radius: 12px; margin-top: 10px; display: none; background: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body id="body-tag">
 
     <div class="container">
         <div id="pin-section" class="box login-box">
-            <h2 id="pin-label">Immettere PIN 🔑</h2>
+            <h2>Immettere PIN 🔑</h2>
             <input type="tel" id="pin-input" maxlength="8" placeholder="****">
             <br>
-            <button class="primary-btn" onclick="checkPin()">Sblocca</button>
+            <button class="primary-btn" onclick="checkPin()">Accedi</button>
         </div>
 
-        <div id="main-app" class="hidden" style="display:none;">
-            
+        <div id="main-app" style="display:none;">
             <div class="top-bar">
                 <button class="btn-tiny" id="upload-btn">☁️ upload</button>
                 <button class="btn-tiny" onclick="resetPin()">⚙️ cambia pin</button>
             </div>
 
             <div class="box info-panel">
-                <h2>STEVEN UNIVERSE STAGIONI COMPLETE</h2>
-                <p>Prima compilation completa creato da Lorenzo Reveglia su ispirazione di Loonex.</p>
-                <p><strong>Questa compilation contiene:</strong> le prime 5 stagioni della serie originale, il film completo e Steven Universe Future.</p>
-                <p style="font-size: 0.8em; font-style: italic; color: #888;">Scusate eventuali problematiche sono alle prime armi.</p>
+                <h2>STEVEN UNIVERSE VAULT</h2>
+                <p>Creato da Lorenzo Reveglia. Raccolta completa delle stagioni, Film e Future.</p>
             </div>
 
-            <div id="seasons-container">
-                </div>
+            <div id="seasons-container"></div>
         </div>
     </div>
 
@@ -89,143 +72,73 @@
         const CLOUD_NAME = "dcsvok2jp"; 
         const PRESET = "video_app_preset";
 
-        // GESTIONE PIN INIZIALE
-        const savedPin = localStorage.getItem('user_pin');
-        if (!savedPin) {
-            document.getElementById('pin-label').innerText = "Crea PIN 🆕";
-        }
-
         function checkPin() {
-            const input = document.getElementById('pin-input').value.trim();
-            if (!savedPin) {
-                if (input.length < 4) return alert("Scegli un PIN di almeno 4 cifre");
-                localStorage.setItem('user_pin', input);
-                location.reload();
-            } else {
-                if (input === savedPin) {
-                    sbloccaApp();
-                } else {
-                    alert("PIN Errato! ❌");
-                }
-            }
+            const input = document.getElementById('pin-input').value;
+            const saved = localStorage.getItem('user_pin') || "1234";
+            if (input === saved) {
+                document.getElementById('pin-section').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+                document.getElementById('body-tag').classList.add('logged-in');
+                renderizzaStagioni();
+            } else { alert("PIN Errato!"); }
         }
 
-        function resetPin() {
-            if(confirm("Vuoi cambiare il PIN?")) {
-                localStorage.removeItem('user_pin');
-                location.reload();
-            }
-        }
+        function resetPin() { if(confirm("Resettare il PIN?")) { localStorage.removeItem('user_pin'); location.reload(); } }
 
-        function sbloccaApp() {
-            document.getElementById('pin-section').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
-            document.getElementById('body-tag').classList.add('logged-in');
-            renderizzaStagioni();
-        }
-
-        // LOGICA ORGANIZZAZIONE VIDEO
         function renderizzaStagioni() {
             const vids = JSON.parse(localStorage.getItem('vids') || "[]");
             const container = document.getElementById('seasons-container');
             container.innerHTML = "";
-
-            const categorie = [
-                { id: "01", nome: "Stagione 1" },
-                { id: "02", nome: "Stagione 2" },
-                { id: "03", nome: "Stagione 3" },
-                { id: "04", nome: "Stagione 4" },
-                { id: "05", nome: "Stagione 5" },
-                { id: "Film", nome: "Film" },
-                { id: "Future", nome: "Future" }
-            ];
+            const categorie = [{id:"01",n:"Stagione 1"},{id:"02",n:"Stagione 2"},{id:"03",n:"Stagione 3"},{id:"04",n:"Stagione 4"},{id:"05",n:"Stagione 5"},{id:"Film",n:"Film"},{id:"Future",n:"Future"}];
 
             categorie.forEach(cat => {
-                // Filtriamo i video per questa categoria
-                const videoFiltrati = vids.filter(v => {
-                    if (cat.id === "Film") return v.name.toLowerCase().includes("film");
-                    if (cat.id === "Future") return v.name.toLowerCase().includes("future");
-                    return v.name.includes(cat.id + "x"); // Cerca "01x", "02x", ecc.
-                });
-
-                if (videoFiltrati.length === 0) return; // Nasconde la stagione se è vuota
-
-                // Crea la linguetta della stagione
-                const sTab = document.createElement('div');
-                sTab.className = 'season-tab';
-                sTab.innerHTML = `<span>📂 ${cat.nome}</span> <span>${videoFiltrati.length} ▼</span>`;
-                sTab.onclick = () => {
-                    const list = sTab.nextElementSibling;
-                    const isVisible = (list.style.display === 'block');
-                    
-                    // Chiude tutte le altre liste (effetto fisarmonica pura)
-                    document.querySelectorAll('.episode-list').forEach(l => l.style.display = 'none');
-                    document.querySelectorAll('video').forEach(v => v.style.display = 'none'); // Ferma i video
-
-                    // Apre la lista attuale se non era già aperta
-                    list.style.display = isVisible ? 'none' : 'block';
+                const filtrati = vids.filter(v => v.name.includes(cat.id + "x") || v.name.toLowerCase().includes(cat.id.toLowerCase()));
+                if (filtrati.length === 0) return;
+                
+                const tab = document.createElement('div');
+                tab.className = 'season-tab';
+                tab.innerHTML = `<span>📂 ${cat.n}</span> <span>${filtrati.length} ▼</span>`;
+                tab.onclick = () => {
+                    const el = tab.nextElementSibling;
+                    el.style.display = el.style.display === 'block' ? 'none' : 'block';
                 };
 
-                const sList = document.createElement('div');
-                sList.className = 'episode-list';
-
-                videoFiltrati.forEach((vid, index) => {
-                    // Pulizia nome: Steven.Universe.01x23.Titolo -> 23.Titolo
-                    let displayName = vid.name.replace(/Steven\.Universe\.\d+x/gi, "");
-                    if (displayName === vid.name) displayName = vid.name; // Pattern non riconosciuto
-                    displayName = displayName.replace(/\./g, " "); // Pulisce i punti
-
+                const list = document.createElement('div');
+                list.className = 'episode-list';
+                filtrati.forEach((vid, i) => {
                     const item = document.createElement('div');
                     item.className = 'episode-item';
-                    item.innerHTML = `🎬 ${displayName}`;
-                    item.onclick = (e) => {
-                        e.stopPropagation();
-                        // Chiude tutti gli altri video
-                        document.querySelectorAll('video').forEach(v => v.style.display = 'none');
-                        // Apre il video attuale
-                        toggleVideo(`vid-${cat.id}-${index}`);
-                    };
-
-                    const videoTag = document.createElement('video');
-                    videoTag.id = `vid-${cat.id}-${index}`;
-                    videoTag.controls = true;
-                    videoTag.src = vid.url;
-
-                    item.appendChild(videoTag);
-                    sList.appendChild(item);
+                    item.innerHTML = `🎬 ${vid.name.replace(/\.[^/.]+$/, "").replace(/\./g, " ")}`;
+                    item.onclick = (e) => { e.stopPropagation(); toggleVideo(`v-${cat.id}-${i}`); };
+                    const vTag = document.createElement('video');
+                    vTag.id = `v-${cat.id}-${i}`; vTag.controls = true; vTag.src = vid.url;
+                    item.appendChild(vTag);
+                    list.appendChild(item);
                 });
-
-                container.appendChild(sTab);
-                container.appendChild(sList);
+                container.appendChild(tab); container.appendChild(list);
             });
         }
 
         function toggleVideo(id) {
             const v = document.getElementById(id);
-            const isVisible = (v.style.display === 'block');
-            v.style.display = isVisible ? 'none' : 'block';
-            if (isVisible) v.pause(); // Mette in pausa se lo chiudi
+            const isVis = v.style.display === 'block';
+            document.querySelectorAll('video').forEach(vid => { vid.style.display='none'; vid.pause(); });
+            v.style.display = isVis ? 'none' : 'block';
         }
 
-        // Widget Cloudinary AGGIORNATO (Sblocco 500 MB)
+        // TENTATIVO DI FORZARE IL CHUNKING VIA CODICE
         const widget = cloudinary.createUploadWidget({
             cloudName: CLOUD_NAME, 
             uploadPreset: PRESET, 
             resourceType: "video",
-            maxFileSize: 500000000, // Impostato a 500 MB (alzabile)
-            chunkSize: 6000000,    // Upload a "pezzi" per file grandi
-            clientAllowedFormats: ["mp4", "mov", "avi", "mkv"],
-            sources: ["local", "url", "camera"] // Sorgenti consentite
+            chunkSize: 5000000, // Forza pezzi da 5MB
+            maxFileSize: 500000000 // Chiede al widget di accettare fino a 500MB
         }, (err, res) => {
             if (res && res.event === "success") {
-                let vids = JSON.parse(localStorage.getItem('vids') || "[]");
-                vids.push({ url: res.info.secure_url, name: res.info.original_filename });
-                localStorage.setItem('vids', JSON.stringify(vids));
+                let v = JSON.parse(localStorage.getItem('vids') || "[]");
+                v.push({ url: res.info.secure_url, name: res.info.original_filename });
+                localStorage.setItem('vids', JSON.stringify(v));
                 renderizzaStagioni();
-            }
-            if (err) {
-                console.error("Errore during upload:", err);
-                alert("Si è verificato un errore durante il caricamento. Controlla la console o lo spazio su Cloudinary.");
             }
         });
         document.getElementById("upload-btn").onclick = () => widget.open();
