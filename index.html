@@ -3,48 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Vault Pro</title>
+    <title>Steven Universe Vault</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; margin: 0; }
+        /* TEMA GENERALE (Inizialmente scuro per il login) */
+        body { font-family: 'Segoe UI', sans-serif; background: #000; color: white; margin: 0; padding: 15px; transition: background 0.5s; }
+        
+        /* TEMA VERDINO (Si attiva dopo il login) */
+        body.logged-in { background: #e8f5e9; color: #1b5e20; }
+
         .container { max-width: 600px; margin: auto; }
-        .box { background: #1e293b; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 20px; }
-        input { padding: 12px; width: 80%; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
-        button { background: #3b82f6; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 5px; }
-        button.secondary { background: #64748b; font-size: 0.8em; }
-        .video-item { background: #334155; margin: 10px 0; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
-        .video-item:hover { background: #475569; }
-        .video-name { font-weight: 500; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-grow: 1; }
-        video { width: 100%; border-radius: 10px; margin-top: 10px; display: none; }
-        .hidden { display: none; }
+        .box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 15px; color: #333; }
+        
+        /* LOGIN & PIN */
+        .login-box { background: #1a1a1a; color: white; border: 1px solid #333; text-align: center; margin-top: 50px; }
+        input { padding: 12px; width: 80%; border-radius: 8px; border: 1px solid #ddd; margin: 10px 0; font-size: 16px; text-align: center; }
+        button { background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        /* HEADER & INFO (Punto 4) */
+        .info-panel { background: #c8e6c9; border-left: 5px solid #4caf50; text-align: left; pointer-events: none; font-size: 0.9em; }
+        .info-panel h2 { margin-top: 0; color: #2e7d32; font-size: 1.2em; }
+
+        /* TASTI SERVIZIO (Punto 2 e 3) */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .btn-tiny { background: #a5d6a7; color: #1b5e20; font-size: 11px; padding: 5px 10px; opacity: 0.7; }
+        .btn-tiny:hover { opacity: 1; }
+
+        /* FISARMONICA STAGIONI (Punto 5 e 6) */
+        .season-tab { background: #81c784; color: white; padding: 12px; border-radius: 8px; margin-top: 5px; cursor: pointer; font-weight: bold; text-align: left; display: flex; justify-content: space-between; }
+        .episode-list { display: none; background: #f1f8e9; padding: 5px; border-radius: 0 0 8px 8px; border: 1px solid #c8e6c9; }
+        .episode-item { padding: 10px; border-bottom: 1px solid #e0e0e0; cursor: pointer; font-size: 0.9em; text-align: left; }
+        .episode-item:last-child { border-bottom: none; }
+        .episode-item:hover { background: #dcedc8; }
+
+        video { width: 100%; border-radius: 8px; margin-top: 10px; display: none; background: #000; }
+
+        /* RESPONSIVE TELEFONO (Punto 8) */
+        @media (max-width: 480px) {
+            .container { padding: 5px; }
+            .box { padding: 15px; }
+        }
     </style>
 </head>
-<body>
+<body id="body-tag">
 
     <div class="container">
-        <div id="set-pin-screen" class="box hidden">
-            <h2>🆕 Crea il tuo PIN</h2>
-            <p>Scegli un codice per proteggere i tuoi video</p>
-            <input type="tel" id="new-pin" placeholder="Nuovo PIN">
+        <div id="pin-section" class="box login-box">
+            <h2 id="pin-label">Immettere PIN 🔑</h2>
+            <input type="tel" id="pin-input" maxlength="8">
             <br>
-            <button onclick="salvaNuovoPin()">Salva PIN</button>
+            <button onclick="checkPin()">Entra</button>
         </div>
 
-        <div id="login-screen" class="box hidden">
-            <h2>🔐 Video Vault</h2>
-            <input type="tel" id="pin-field" placeholder="Inserisci PIN">
-            <br>
-            <button onclick="validaPin()">Entra</button>
-        </div>
-
-        <div id="main-app" class="hidden">
-            <div class="box">
-                <h2>📂 I Miei Video</h2>
-                <button id="upload-btn" style="background: #10b981;">➕ Carica Video</button>
-                <br>
-                <button class="secondary" onclick="mostraCambioPin()">⚙️ Cambia PIN</button>
-            </div>
+        <div id="main-app" class="hidden" style="display:none;">
             
-            <div id="gallery"></div>
+            <div class="top-bar">
+                <button class="btn-tiny" id="upload-btn">☁️ upload</button>
+                <button class="btn-tiny" onclick="resetPin()">⚙️ cambia pin</button>
+            </div>
+
+            <div class="box info-panel">
+                <h2>STEVEN UNIVERSE STAGIONI COMPLETE</h2>
+                <p>Prima compilation completa creato da Lorenzo Reveglia su ispirazione di Loonex.</p>
+                <p><strong>Questa compilation contiene:</strong> le prime 5 stagioni della serie originale, il film completo e Steven Universe Future.</p>
+                <p style="font-size: 0.8em; font-style: italic;">Scusate eventuali problematiche sono alle prime armi.</p>
+            </div>
+
+            <div id="seasons-container">
+                </div>
         </div>
     </div>
 
@@ -54,80 +79,122 @@
         const CLOUD_NAME = "dcsvok2jp"; 
         const PRESET = "video_app_preset";
 
-        // Gestione Avvio (Controllo se esiste un PIN)
-        window.onload = function() {
-            if (!localStorage.getItem('user_pin')) {
-                document.getElementById('set-pin-screen').classList.remove('hidden');
-            } else {
-                document.getElementById('login-screen').classList.remove('hidden');
-            }
-        };
+        // GESTIONE PIN INIZIALE
+        const savedPin = localStorage.getItem('user_pin');
+        if (!savedPin) {
+            document.getElementById('pin-label').innerText = "Crea PIN 🆕";
+        }
 
-        function salvaNuovoPin() {
-            const val = document.getElementById('new-pin').value.trim();
-            if (val.length >= 4) {
-                localStorage.setItem('user_pin', val);
+        function checkPin() {
+            const input = document.getElementById('pin-input').value;
+            if (!savedPin) {
+                if (input.length < 4) return alert("Scegli un PIN di almeno 4 cifre");
+                localStorage.setItem('user_pin', input);
                 location.reload();
-            } else { alert("Il PIN deve essere di almeno 4 cifre"); }
+            } else {
+                if (input === savedPin) {
+                    sbloccaApp();
+                } else {
+                    alert("PIN Errato! ❌");
+                }
+            }
         }
 
-        function validaPin() {
-            const input = document.getElementById('pin-field').value.trim();
-            if (input === localStorage.getItem('user_pin')) {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                renderizzaLista();
-            } else { alert("PIN Errato!"); }
-        }
-
-        function mostraCambioPin() {
-            if(confirm("Vuoi cambiare il tuo PIN attuale?")) {
+        function resetPin() {
+            if(confirm("Vuoi cambiare il PIN?")) {
                 localStorage.removeItem('user_pin');
                 location.reload();
             }
         }
 
-        // Widget Cloudinary
+        function sbloccaApp() {
+            document.getElementById('pin-section').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            document.getElementById('body-tag').classList.add('logged-in');
+            renderizzaStagioni();
+        }
+
+        // LOGICA ORGANIZZAZIONE VIDEO (Punto 5 e 6)
+        function renderizzaStagioni() {
+            const vids = JSON.parse(localStorage.getItem('vids') || "[]");
+            const container = document.getElementById('seasons-container');
+            container.innerHTML = "";
+
+            const categorie = [
+                { id: "01", nome: "Stagione 1" },
+                { id: "02", nome: "Stagione 2" },
+                { id: "03", nome: "Stagione 3" },
+                { id: "04", nome: "Stagione 4" },
+                { id: "05", nome: "Stagione 5" },
+                { id: "Film", nome: "Film" },
+                { id: "Future", nome: "Future" }
+            ];
+
+            categorie.forEach(cat => {
+                // Filtriamo i video per questa categoria
+                const videoFiltrati = vids.filter(v => {
+                    if (cat.id === "Film") return v.name.toLowerCase().includes("film");
+                    if (cat.id === "Future") return v.name.toLowerCase().includes("future");
+                    return v.name.includes(cat.id + "x"); // Cerca "01x", "02x", ecc.
+                });
+
+                // Crea la linguetta della stagione
+                const sTab = document.createElement('div');
+                sTab.className = 'season-tab';
+                sTab.innerHTML = `<span>${cat.nome}</span> <span>${videoFiltrati.length} ▼</span>`;
+                sTab.onclick = () => {
+                    const list = sTab.nextElementSibling;
+                    list.style.display = (list.style.display === 'block') ? 'none' : 'block';
+                };
+
+                const sList = document.createElement('div');
+                sList.className = 'episode-list';
+
+                videoFiltrati.forEach((vid, index) => {
+                    // Pulizia nome: Steven.Universe.01x23.Titolo -> 23.Titolo (Punto 6)
+                    let displayName = vid.name.replace(/Steven\.Universe\.\d+x/gi, "");
+                    // Se non segue il pattern, lasciamo il nome originale
+                    if (displayName === vid.name) displayName = vid.name;
+
+                    const item = document.createElement('div');
+                    item.className = 'episode-item';
+                    item.innerHTML = `🎬 ${displayName.replace(/\./g, " ")}`;
+                    item.onclick = (e) => {
+                        e.stopPropagation();
+                        toggleVideo(`vid-${cat.id}-${index}`);
+                    };
+
+                    const videoTag = document.createElement('video');
+                    videoTag.id = `vid-${cat.id}-${index}`;
+                    videoTag.controls = true;
+                    videoTag.src = vid.url;
+
+                    item.appendChild(videoTag);
+                    sList.appendChild(item);
+                });
+
+                container.appendChild(sTab);
+                container.appendChild(sList);
+            });
+        }
+
+        function toggleVideo(id) {
+            const v = document.getElementById(id);
+            v.style.display = (v.style.display === 'block') ? 'none' : 'block';
+        }
+
+        // Widget Cloudinary (Punto 2)
         const widget = cloudinary.createUploadWidget({
             cloudName: CLOUD_NAME, uploadPreset: PRESET, resourceType: "video"
         }, (err, res) => {
             if (res && res.event === "success") {
                 let vids = JSON.parse(localStorage.getItem('vids') || "[]");
-                // Salviamo URL e Nome originale
-                vids.push({
-                    url: res.info.secure_url,
-                    name: res.info.original_filename || "Video senza nome"
-                });
+                vids.push({ url: res.info.secure_url, name: res.info.original_filename });
                 localStorage.setItem('vids', JSON.stringify(vids));
-                renderizzaLista();
+                renderizzaStagioni();
             }
         });
-
         document.getElementById("upload-btn").onclick = () => widget.open();
-
-        function renderizzaLista() {
-            const container = document.getElementById('gallery');
-            const vids = JSON.parse(localStorage.getItem('vids') || "[]");
-            container.innerHTML = "";
-
-            vids.slice().reverse().forEach((video, index) => {
-                const div = document.createElement('div');
-                div.className = 'box'; // Ogni video nel suo box
-                div.innerHTML = `
-                    <div class="video-item" onclick="toggleVideo(${index})">
-                        <span class="video-name">🎬 ${video.name}</span>
-                        <span>▼</span>
-                    </div>
-                    <video id="vid-${index}" controls src="${video.url}"></video>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function toggleVideo(index) {
-            const v = document.getElementById(`vid-${index}`);
-            v.style.display = (v.style.display === 'block') ? 'none' : 'block';
-        }
     </script>
 </body>
 </html>
