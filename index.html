@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Vault Cloud - Test</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: auto; }
+        .video-card { background: #1e1e1e; margin: 20px 0; padding: 15px; border-radius: 12px; border: 1px solid #333; }
+        video { width: 100%; border-radius: 8px; background: black; }
+        button { background: #059669; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1em; }
+        button:active { transform: scale(0.98); }
+        #status-msg { color: #aaa; margin-top: 15px; font-style: italic; }
+        .delete-btn { background: #dc2626; padding: 5px 10px; font-size: 0.8em; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📂 Cloud Video Test</h1>
+        <p>Se vedi questa pagina su Netlify, la pubblicazione è riuscita!</p>
+        
+        <button id="upload-btn">➕ Carica un Video</button>
+        <p id="status-msg">In attesa di azioni...</p>
+        
+        <hr style="border: 0; border-top: 1px solid #333; margin: 30px 0;">
+        
+        <div id="video-list"></div>
+    </div>
+
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+
+    <script>
+        // I TUOI DATI CLOUDINARY
+        const CLOUD_NAME = "dcsvok2jp"; 
+        const UPLOAD_PRESET = "video_app_preset";
+
+        // Recupero video dal browser
+        let savedVideos = JSON.parse(localStorage.getItem('myVideos')) || [];
+
+        // Configurazione del Widget
+        const myWidget = cloudinary.createUploadWidget({
+            cloudName: CLOUD_NAME, 
+            uploadPreset: UPLOAD_PRESET,
+            resourceType: "video",
+            sources: ["local", "camera"],
+            multiple: false
+        }, (error, result) => { 
+            if (error) {
+                document.getElementById('status-msg').innerText = "Errore Cloudinary: " + error.message;
+            }
+            if (!error && result && result.event === "success") { 
+                document.getElementById('status-msg').innerText = "Caricamento completato!";
+                savedVideos.push(result.info.secure_url);
+                localStorage.setItem('myVideos', JSON.stringify(savedVideos));
+                renderVideos();
+            }
+        });
+
+        // Bottone Carica
+        document.getElementById("upload-btn").addEventListener("click", () => {
+            document.getElementById('status-msg').innerText = "Apertura finestra... (controlla i pop-up)";
+            myWidget.open();
+        });
+
+        // Funzione per mostrare i video e tasto cancella
+        function renderVideos() {
+            const list = document.getElementById('video-list');
+            list.innerHTML = "";
+            
+            if (savedVideos.length === 0) {
+                list.innerHTML = "<p style='color:#666'>Nessun video caricato.</p>";
+            }
+
+            savedVideos.slice().reverse().forEach((url, index) => {
+                const realIndex = savedVideos.length - 1 - index;
+                const div = document.createElement('div');
+                div.className = 'video-card';
+                div.innerHTML = `
+                    <video controls src="${url}"></video>
+                    <br>
+                    <button class="delete-btn" onclick="deleteVideo(${realIndex})">Elimina dalla lista</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function deleteVideo(index) {
+            if(confirm("Vuoi rimuovere questo video dalla lista locale?")) {
+                savedVideos.splice(index, 1);
+                localStorage.setItem('myVideos', JSON.stringify(savedVideos));
+                renderVideos();
+            }
+        }
+
+        // Mostra i video al caricamento
+        renderVideos();
+    </script>
+</body>
+</html>
