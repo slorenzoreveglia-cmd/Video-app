@@ -5,27 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Steven Universe Vault - Beta</title>
     <style>
-        /* TEMA VERDE SALVIA SOFT */
         body { font-family: 'Segoe UI', sans-serif; background: #1a1a1a; color: white; margin: 0; padding: 15px; }
         body.logged-in { background: #f4f7f0; color: #4b6337; }
-
         .container { max-width: 600px; margin: auto; }
         .box { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e0ebd5; color: #333; }
-        
-        /* LOGIN */
         .login-box { background: #2c2c2c; color: white; text-align: center; margin-top: 50px; }
         input { padding: 15px; width: 85%; border-radius: 12px; border: 1px solid #ddd; margin: 15px 0; font-size: 18px; text-align: center; }
         button.primary-btn { background: #b0c994; color: white; border: none; padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; }
-
-        /* INTERFACCIA APP */
-        .top-bar { display: flex; justify-content: space-between; margin-bottom: 15px; }
-        .btn-tiny { background: #e8f0df; color: #6b8254; font-size: 11px; padding: 7px 15px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
-
+        .top-bar { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 5px; }
+        .btn-tiny { background: #e8f0df; color: #6b8254; font-size: 10px; padding: 7px 12px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
         .season-tab { background: #ffffff; color: #6b8254; padding: 18px; border-radius: 15px; margin-top: 10px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; border: 1px solid #e0ebd5; }
         .episode-list { display: none; background: #ffffff; padding: 5px; border-radius: 0 0 15px 15px; border: 1px solid #e0ebd5; border-top: none; }
         .episode-item { padding: 15px; border-bottom: 1px solid #f4f7f0; cursor: pointer; color: #4b6337; text-align: left; }
-
-        video { width: 100%; border-radius: 12px; margin-top: 10px; display: none; background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        video { width: 100%; border-radius: 12px; margin-top: 10px; display: none; background: #000; }
     </style>
 </head>
 <body id="body-tag">
@@ -33,7 +25,7 @@
     <div class="container">
         <div id="pin-section" class="box login-box">
             <h2>Steven Vault Beta 🔑</h2>
-            <input type="tel" id="pin-input" maxlength="8" placeholder="Inserisci PIN">
+            <input type="tel" id="pin-input" maxlength="8" placeholder="PIN (default 1234)">
             <br><br>
             <button class="primary-btn" onclick="checkPin()">Entra</button>
         </div>
@@ -41,12 +33,12 @@
         <div id="main-app" style="display:none;">
             <div class="top-bar">
                 <button class="btn-tiny" id="upload-btn">☁️ upload</button>
-                <button class="btn-tiny" onclick="resetPin()">⚙️ reset pin</button>
+                <button class="btn-tiny" onclick="addManualLink()">🔗 aggiungi link</button>
+                <button class="btn-tiny" onclick="resetPin()">⚙️ reset</button>
             </div>
 
-            <div class="box" style="border-left: 5px solid #b0c994; padding: 15px;">
-                <h3 style="margin:0; color:#6b8254;">Catalogo Steven Universe</h3>
-                <p style="margin:5px 0 0 0; font-size:0.85em; color:#7a8a6d;">I video caricati appariranno automaticamente divisi per stagione.</p>
+            <div class="box" id="empty-msg">
+                <p style="text-align:center; color:#7a8a6d;">Nessun video trovato. Carica un video o aggiungi un link per iniziare!</p>
             </div>
 
             <div id="seasons-container"></div>
@@ -59,7 +51,6 @@
         const CLOUD_NAME = "dcsvok2jp"; 
         const PRESET = "video_app_preset";
 
-        // Gestione Accesso
         function checkPin() {
             const input = document.getElementById('pin-input').value;
             const saved = localStorage.getItem('user_pin') || "1234";
@@ -71,14 +62,26 @@
             } else { alert("PIN Errato!"); }
         }
 
-        function resetPin() { if(confirm("Resettare il PIN?")) { localStorage.removeItem('user_pin'); location.reload(); } }
+        function addManualLink() {
+            const url = prompt("Incolla l'URL del video (da Cloudinary):");
+            if(!url) return;
+            const nome = prompt("Nome (es: 03x01 Il Titolo):");
+            if(!nome) return;
 
-        // Organizzazione Catalogo
+            let vids = JSON.parse(localStorage.getItem('vids') || "[]");
+            vids.push({ url: url, name: nome });
+            localStorage.setItem('vids', JSON.stringify(vids));
+            renderizzaStagioni();
+        }
+
         function renderizzaStagioni() {
             const vids = JSON.parse(localStorage.getItem('vids') || "[]");
             const container = document.getElementById('seasons-container');
+            const emptyMsg = document.getElementById('empty-msg');
             container.innerHTML = "";
             
+            if(vids.length > 0) emptyMsg.style.display = 'none';
+
             const stagioni = [
                 {id:"01",n:"Stagione 1"},{id:"02",n:"Stagione 2"},{id:"03",n:"Stagione 3"},
                 {id:"04",n:"Stagione 4"},{id:"05",n:"Stagione 5"},{id:"Film",n:"Film"},{id:"Future",n:"Future"}
@@ -90,12 +93,10 @@
 
                 const tab = document.createElement('div');
                 tab.className = 'season-tab';
-                tab.innerHTML = `<span>📂 ${cat.n}</span> <span>${filtrati.length} episodi ▼</span>`;
+                tab.innerHTML = `<span>📂 ${cat.n}</span> <span>${filtrati.length} ▼</span>`;
                 tab.onclick = () => {
                     const list = tab.nextElementSibling;
-                    const isVis = list.style.display === 'block';
-                    document.querySelectorAll('.episode-list').forEach(l => l.style.display = 'none');
-                    list.style.display = isVis ? 'none' : 'block';
+                    list.style.display = list.style.display === 'block' ? 'none' : 'block';
                 };
 
                 const list = document.createElement('div');
@@ -104,18 +105,13 @@
                 filtrati.forEach((vid, i) => {
                     const item = document.createElement('div');
                     item.className = 'episode-item';
-                    item.innerHTML = `🎬 ${vid.name.split('.')[0]}`; // Mostra il nome senza estensione
-                    
+                    item.innerHTML = `🎬 ${vid.name}`;
                     const vTag = document.createElement('video');
-                    vTag.id = `v-${cat.id}-${i}`; vTag.controls = true; vTag.src = vid.url;
-                    
+                    vTag.controls = true; vTag.src = vid.url;
                     item.onclick = (e) => { 
                         e.stopPropagation(); 
-                        const isVis = vTag.style.display === 'block';
-                        document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
-                        vTag.style.display = isVis ? 'none' : 'block';
+                        vTag.style.display = vTag.style.display === 'block' ? 'none' : 'block';
                     };
-
                     item.appendChild(vTag);
                     list.appendChild(item);
                 });
@@ -123,11 +119,8 @@
             });
         }
 
-        // Funzione Upload Cloudinary
         const widget = cloudinary.createUploadWidget({
-            cloudName: CLOUD_NAME, 
-            uploadPreset: PRESET, 
-            resourceType: "video"
+            cloudName: CLOUD_NAME, uploadPreset: PRESET, resourceType: "video"
         }, (err, res) => {
             if (res && res.event === "success") {
                 let v = JSON.parse(localStorage.getItem('vids') || "[]");
