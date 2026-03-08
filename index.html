@@ -2,14 +2,14 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SU_Streaming">
     
-    <link rel="apple-touch-icon" href="LINK_DEL_TUO_LOGO_QUI">
+    <link rel="apple-touch-icon" href="LINK_LOGO_1">
     <link rel="icon" href="https://res.cloudinary.com/dcsvok2jp/image/upload/v1773007380/Logo_2_nmufb2.jpg">
 
     <title>SU_Streaming</title>
@@ -17,48 +17,52 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            margin: 0; padding: 15px; transition: 0.5s; background: #1a1a1a; color: white; min-height: 100vh; line-height: 1.6;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            margin: 0; padding: 10px; transition: 0.5s; background: #1a1a1a; color: white; min-height: 100vh;
+            line-height: 1.4; /* Testo più compatto */
         }
 
-        .container { max-width: 600px; margin: auto; }
+        .container { max-width: 500px; margin: auto; }
         
-        /* BOX INTRODUTTIVO (TESTO ESATTO RICHIESTO) */
+        /* BOX INTRODUTTIVO OTTIMIZZATO */
         .intro-box { 
-            padding: 25px; border-radius: 25px; margin-bottom: 25px; 
+            padding: 15px; border-radius: 18px; margin-bottom: 15px; 
             border: 1px solid rgba(255,255,255,0.1); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            white-space: pre-line; /* Mantiene gli a capo del testo */
+            background: rgba(255,255,255,0.05);
+            font-size: 13.5px; /* Leggermente più piccolo */
         }
-        .intro-box h2 { margin-top: 0; font-size: 1.4em; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px; }
-        .dev-note-title { font-weight: bold; margin-top: 20px; display: block; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
-        .dev-note-text { font-size: 0.85em; opacity: 0.8; font-style: italic; display: block; margin-top: 5px; }
+        .intro-box h2 { margin: 0 0 8px 0; font-size: 1.15em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
+        .intro-list { list-style: none; padding: 0; margin: 8px 0; }
+        .intro-list li { margin-bottom: 3px; }
+        
+        .dev-note-title { font-weight: bold; margin-top: 10px; display: block; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; font-size: 0.9em; }
+        .dev-note-text { font-size: 0.8em; opacity: 0.75; font-style: italic; display: block; margin-top: 2px; }
 
-        /* LOGIN SU_Streaming */
+        /* LOGIN */
         .login-box { 
             background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); text-align: center; 
-            margin-top: 20vh; border-radius: 30px; padding: 40px 20px; border: 1px solid rgba(255,255,255,0.2); 
+            margin-top: 15vh; border-radius: 25px; padding: 30px 15px; border: 1px solid rgba(255,255,255,0.2); 
         }
-        .login-box h1 { font-size: 2.2em; letter-spacing: 2px; margin-bottom: 5px; }
-        input { padding: 16px; width: 85%; border-radius: 15px; border: none; margin: 20px 0; font-size: 20px; text-align: center; }
-        button.primary-btn { border: none; padding: 16px 40px; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 1em; text-transform: uppercase; }
+        .login-box h1 { font-size: 2em; margin-bottom: 5px; }
+        input { padding: 14px; width: 90%; border-radius: 12px; border: none; margin: 15px 0; font-size: 18px; text-align: center; }
+        button.primary-btn { border: none; padding: 14px 35px; border-radius: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
 
-        /* INTERFACCIA */
-        .top-bar { display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center; }
-        .btn-tiny { padding: 10px 18px; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 10px; text-transform: uppercase; color: white; background: rgba(0,0,0,0.4); }
+        /* UI */
+        .top-bar { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .btn-tiny { padding: 8px 15px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 10px; color: white; background: rgba(0,0,0,0.4); }
 
-        .season-tab { padding: 22px; border-radius: 20px; margin-top: 15px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .episode-list { display: none; padding: 10px; border-radius: 0 0 20px 20px; margin-top: -10px; background: rgba(255,255,255,0.08); }
-        .episode-item { padding: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+        .season-tab { padding: 18px; border-radius: 15px; margin-top: 10px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+        .episode-list { display: none; padding: 5px; border-radius: 0 0 15px 15px; margin-top: -5px; background: rgba(255,255,255,0.05); }
+        .episode-item { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; }
         
-        video { width: 100%; border-radius: 20px; margin-top: 10px; display: none; background: #000; border: 2px solid rgba(255,255,255,0.2); }
+        video { width: 100%; border-radius: 12px; margin-top: 8px; display: none; background: #000; }
 
-        /* TEMI SELEZIONATI (1, 2, 5, 7, 9) */
-        body.theme-1.logged-in { background: #1e1b4b; color: #e0e7ff; } body.theme-1 .season-tab, body.theme-1 .intro-box { background: linear-gradient(135deg, #4338ca, #6d28d9); color: white; }
-        body.theme-2.logged-in { background: #2e1065; color: #f5f3ff; } body.theme-2 .season-tab, body.theme-2 .intro-box { background: linear-gradient(135deg, #7c3aed, #4c1d95); color: white; }
-        body.theme-3.logged-in { background: #2d0630; color: #fae8ff; } body.theme-3 .season-tab, body.theme-3 .intro-box { background: linear-gradient(135deg, #701a75, #d946ef); color: white; }
-        body.theme-4.logged-in { background: #083344; color: #ecfeff; } body.theme-4 .season-tab, body.theme-4 .intro-box { background: linear-gradient(135deg, #0e7490, #0891b2); color: white; }
-        body.theme-5.logged-in { background: #042f2e; color: #f0fdfa; } body.theme-5 .season-tab, body.theme-5 .intro-box { background: linear-gradient(135deg, #0f766e, #14b8a6); color: white; }
+        /* TEMI */
+        body.theme-1.logged-in { background: #1e1b4b; } body.theme-1 .season-tab, body.theme-1 .intro-box { background: linear-gradient(135deg, #4338ca, #6d28d9); color: white; }
+        body.theme-2.logged-in { background: #2e1065; } body.theme-2 .season-tab, body.theme-2 .intro-box { background: linear-gradient(135deg, #7c3aed, #4c1d95); color: white; }
+        body.theme-3.logged-in { background: #2d0630; } body.theme-3 .season-tab, body.theme-3 .intro-box { background: linear-gradient(135deg, #701a75, #d946ef); color: white; }
+        body.theme-4.logged-in { background: #083344; } body.theme-4 .season-tab, body.theme-4 .intro-box { background: linear-gradient(135deg, #0e7490, #0891b2); color: white; }
+        body.theme-5.logged-in { background: #042f2e; } body.theme-5 .season-tab, body.theme-5 .intro-box { background: linear-gradient(135deg, #0f766e, #14b8a6); color: white; }
 
         body.logged-in button.primary-btn { background: currentColor; filter: contrast(1.2) brightness(0.8); color: white; }
     </style>
@@ -68,7 +72,7 @@
     <div class="container">
         <div id="pin-section" class="login-box">
             <h1>SU_Streaming</h1>
-            <p style="opacity:0.7">Inserisci il PIN per accedere</p>
+            <p style="opacity:0.7; font-size: 0.9em;">Inserisci il PIN per accedere</p>
             <input type="tel" id="pin-input" maxlength="8" placeholder="****">
             <br>
             <button class="primary-btn" onclick="checkPin()">Accedi</button>
@@ -77,21 +81,19 @@
         <div id="main-app" style="display:none;">
             <div class="top-bar">
                 <button class="btn-tiny" onclick="resetPin()">⚙️ PIN</button>
-                <button class="btn-tiny" id="theme-btn" style="background: white; color: black;">🎨 CAMBIA COLORE</button>
+                <button class="btn-tiny" id="theme-btn" style="background: white; color: black;">🎨 COLORE</button>
             </div>
 
             <div class="intro-box">
-                <h2>Steven Universe: The Complete Collection ✨</h2>
-                Questa web app nasce dal desiderio di raccogliere in un unico posto l'intero universo creato da Rebecca Sugar. Al suo interno troverai:
-
-                💎 Tutte le stagioni della serie originale Steven Universe
-                🎬 Steven Universe: Il Film
-                🌟 Steven Universe Future
-
+                <h2>Steven Universe: The Collection ✨</h2>
+                Questa web app nasce per raccogliere in un unico posto l'intero universo di Rebecca Sugar. Troverai:
+                <ul class="intro-list">
+                    <li>💎 Serie originale (Tutte le stagioni)</li>
+                    <li>🎬 Steven Universe: Il Film</li>
+                    <li>🌟 Steven Universe Future</li>
+                </ul>
                 <span class="dev-note-title">Nota dello sviluppatore:</span>
-                <span class="dev-note-text">Essendo il mio primo progetto nel campo dello sviluppo web, l'applicazione potrebbe presentare qualche piccola imperfezione tecnica. È un lavoro in continua evoluzione che mi è servito per testare e migliorare le mie competenze.
-                
-                Sviluppato con passione da Lorenzo Reveglia.</span>
+                <span class="dev-note-text">Primo progetto web, in continua evoluzione per migliorare le mie competenze. Sviluppato da Lorenzo Reveglia.</span>
             </div>
 
             <div id="seasons-container"></div>
@@ -99,7 +101,6 @@
     </div>
 
     <script>
-        // Database Link
         const DATABASE_VIDEO = [
             { name: "01x01 Gemma lucente", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987419/Steven.Universe.01x01.Gemma.Lucente.Gem.Glow_jxffcb.mp4" },
             { name: "01x34 Cocomerino", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987309/Steven.Universe.01x34.Cocomerino.Il.Cocomero.Bambino.Waterme_bka5cy.mp4" },
@@ -132,6 +133,7 @@
                 document.getElementById('pin-section').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
                 document.body.classList.add('logged-in');
+                window.scrollTo(0, 1); // Prova a nascondere la barra URL
                 renderizzaStagioni();
             } else { alert("PIN Errato!"); }
         }
@@ -164,7 +166,7 @@
                     item.className = 'episode-item';
                     let num = vid.name.split('x')[1]?.split(' ')[0];
                     let titolo = vid.name.split(' ').slice(1).join(' ');
-                    item.innerHTML = `🎬 <span style="opacity:0.6; font-size: 0.9em;">Ep. ${parseInt(num)}</span> ${titolo}`;
+                    item.innerHTML = `🎬 <span style="opacity:0.6; font-size: 0.8em;">Ep. ${parseInt(num)}</span> ${titolo}`;
                     const vTag = document.createElement('video');
                     vTag.controls = true; vTag.src = vid.url; vTag.setAttribute('playsinline', '');
                     item.onclick = (e) => {
