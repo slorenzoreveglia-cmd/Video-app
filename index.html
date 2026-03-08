@@ -3,193 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steven Universe Vault - Beta</title>
+    <title>Steven Universe Vault - Real Colors</title>
     <style>
-        /* ==========================================
-           TEMA BASE E STRUTTURA (PASTELLO SOFT)
-           ========================================== */
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #1a1a1a; color: white; margin: 0; padding: 15px; transition: 0.3s background, 0.3s color; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; transition: 0.4s; background: #1a1a1a; color: white; }
         .container { max-width: 600px; margin: auto; }
         
-        /* LOGIN E BOX */
-        .login-box { background: #2c2c2c; color: white; text-align: center; margin-top: 50px; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        input { padding: 15px; width: 85%; border-radius: 12px; border: 1px solid #ddd; margin: 15px 0; font-size: 18px; text-align: center; outline: none; }
-        button.primary-btn { background: #b0c994; color: white; border: none; padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: bold; }
-        button.primary-btn:hover { background: #a1ba85; }
+        /* LOGIN */
+        .login-box { background: #2c2c2c; text-align: center; margin-top: 50px; border-radius: 25px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        input { padding: 15px; width: 80%; border-radius: 15px; border: none; margin: 15px 0; font-size: 18px; text-align: center; }
+        button.primary-btn { border: none; padding: 15px 35px; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 1.1em; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
-        /* INTERFACCIA APP - COLORI DEFINITI NEI TEMI */
-        .top-bar { display: flex; justify-content: flex-end; margin-bottom: 15px; gap: 5px; }
-        .btn-tiny { background: rgba(0,0,0,0.1); color: inherit; font-size: 10px; padding: 7px 12px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s background; }
-        .btn-tiny:hover { background: rgba(0,0,0,0.2); }
+        /* INTERFACCIA */
+        .top-bar { display: flex; justify-content: flex-end; margin-bottom: 15px; gap: 10px; }
+        .btn-tiny { padding: 8px 15px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 11px; opacity: 0.9; }
 
-        /* BOX PRINCIPALI */
-        .box { background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.05); color: #333; transition: 0.3s background; }
-        
-        /* LISTA STAGIONI ED EPISODI */
-        .season-tab { background: #ffffff; color: inherit; padding: 18px; border-radius: 15px; margin-top: 10px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; border: 1px solid rgba(0,0,0,0.05); transition: 0.3s background, 0.2s border; }
-        .season-tab:hover { background: rgba(255,255,255,0.8); }
+        .season-tab { padding: 20px; border-radius: 20px; margin-top: 12px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .episode-list { display: none; padding: 10px; border-radius: 0 0 20px 20px; margin-top: -10px; }
+        .episode-item { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 0.95em; }
 
-        .episode-list { display: none; background: #ffffff; padding: 5px; border-radius: 0 0 15px 15px; border: 1px solid rgba(0,0,0,0.05); border-top: none; }
-        .episode-item { padding: 15px; border-bottom: 1px solid rgba(0,0,0,0.03); cursor: pointer; text-align: left; }
-        .episode-item:hover { background: rgba(0,0,0,0.01); }
-
-        video { width: 100%; border-radius: 12px; margin-top: 10px; display: none; background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        video { width: 100%; border-radius: 15px; margin-top: 10px; display: none; background: #000; }
 
         /* ==========================================
-           DEFINIZIONE TEMI COLORE ( Steven & Gems)
+           I TUOI COLORI (ESTRATTI DALLE FOTO)
            ========================================== */
         
-        /* Tema 0: Verde Salvia Soft (Il tema base che avevamo) */
-        body.theme-0 .box, body.theme-0 .season-tab, body.theme-0 .episode-list { background: #ffffff; border-color: #e0ebd5; color: #4b6337; }
-        body.theme-0 button.primary-btn { background: #b0c994; }
-        body.theme-0 .btn-tiny { background: #e8f0df; color: #6b8254; }
+        /* Tema 1: Rosa Steven (Foto 1/5) */
+        body.theme-1.logged-in { background: #FFD1DC; color: #D1477A; }
+        body.theme-1 .season-tab, body.theme-1 .episode-list { background: #FF69B4; color: white; }
+        body.theme-1 button.primary-btn { background: #FF1493; color: white; }
+        body.theme-1 .btn-tiny { background: #D1477A; color: white; }
 
-        /* Tema 1: Rosa Quarzo pastello */
-        body.theme-1.logged-in { background: #faf3f5; color: #724e5b; }
-        body.theme-1 .box, body.theme-1 .season-tab, body.theme-1 .episode-list { background: #ffffff; border-color: #f6e6ea; color: #724e5b; }
-        body.theme-1 button.primary-btn { background: #eec1cd; }
-        body.theme-1 .btn-tiny { background: #fdf1f4; color: #886470; }
+        /* Tema 2: Blu Profondo (Foto 2/7) */
+        body.theme-2.logged-in { background: #E0F2F1; color: #006064; }
+        body.theme-2 .season-tab, body.theme-2 .episode-list { background: #00ACC1; color: white; }
+        body.theme-2 button.primary-btn { background: #00838F; color: white; }
+        body.theme-2 .btn-tiny { background: #006064; color: white; }
 
-        /* Tema 2: Azzurro Perla chiaro */
-        body.theme-2.logged-in { background: #f0f7fa; color: #3a5c68; }
-        body.theme-2 .box, body.theme-2 .season-tab, body.theme-2 .episode-list { background: #ffffff; border-color: #e0f1f6; color: #3a5c68; }
-        body.theme-2 button.primary-btn { background: #a9d9e6; }
-        body.theme-2 .btn-tiny { background: #e8f7fa; color: #51717d; }
+        /* Tema 3: Verde Peridoto (Foto 3/8) */
+        body.theme-3.logged-in { background: #F1F8E9; color: #33691E; }
+        body.theme-3 .season-tab, body.theme-3 .episode-list { background: #7CB342; color: white; }
+        body.theme-3 button.primary-btn { background: #558B2F; color: white; }
+        body.theme-3 .btn-tiny { background: #33691E; color: white; }
 
-        /* Tema 3: Viola Amatista sfumato */
-        body.theme-3.logged-in { background: #f4f0f7; color: #604a6e; }
-        body.theme-3 .box, body.theme-3 .season-tab, body.theme-3 .episode-list { background: #ffffff; border-color: #ede0f1; color: #604a6e; }
-        body.theme-3 button.primary-btn { background: #dabde0; }
-        body.theme-3 .btn-tiny { background: #f5eef7; color: #735e7d; }
+        /* Tema 4: Viola Cratere (Foto 4/6) */
+        body.theme-4.logged-in { background: #F3E5F5; color: #4A148C; }
+        body.theme-4 .season-tab, body.theme-4 .episode-list { background: #AB47BC; color: white; }
+        body.theme-4 button.primary-btn { background: #8E24AA; color: white; }
+        body.theme-4 .btn-tiny { background: #4A148C; color: white; }
 
-        /* Tema 4: Giallo Stevan tenue */
-        body.theme-4.logged-in { background: #fafaf3; color: #6e674a; }
-        body.theme-4 .box, body.theme-4 .season-tab, body.theme-4 .episode-list { background: #ffffff; border-color: #f6f6e0; color: #6e674a; }
-        body.theme-4 button.primary-btn { background: #eec1cd; } /* Steven Pink per il tasto */
-        body.theme-4 .btn-tiny { background: #fffde8; color: #857e62; }
-
-        /* Tema 5: Rosa Granata deciso ma pastello */
-        body.theme-5.logged-in { background: #faf3f3; color: #7c4c4c; }
-        body.theme-5 .box, body.theme-5 .season-tab, body.theme-5 .episode-list { background: #ffffff; border-color: #f6e6e6; color: #7c4c4c; }
-        body.theme-5 button.primary-btn { background: #ecb1b1; }
-        body.theme-5 .btn-tiny { background: #fdf1f1; color: #8c6060; }
-
-        /* Tema 6: Verde Giada tenue */
-        body.theme-6.logged-in { background: #f3fcf8; color: #436d5e; }
-        body.theme-6 .box, body.theme-6 .season-tab, body.theme-6 .episode-list { background: #ffffff; border-color: #e6f6f1; color: #436d5e; }
-        body.theme-6 button.primary-btn { background: #b1ecd1; }
-        body.theme-6 .btn-tiny { background: #f1fdf9; color: #5c8273; }
-
-        /* Tema 7: Tema Notte Soft (Scuro sfumato, non nero) */
-        body.theme-7.logged-in { background: #25282e; color: #b0b9c9; }
-        body.theme-7 .box, body.theme-7 .season-tab, body.theme-7 .episode-list { background: #2c3038; border-color: #383e4a; color: #b0b9c9; }
-        body.theme-7 button.primary-btn { background: #5c626d; }
-        body.theme-7 .btn-tiny { background: #383e4a; color: #c4ccd9; }
-        
+        /* Tema 5: Giallo Cartoon */
+        body.theme-5.logged-in { background: #FFFDE7; color: #F57F17; }
+        body.theme-5 .season-tab, body.theme-5 .episode-list { background: #FDD835; color: #5D4037; }
+        body.theme-5 button.primary-btn { background: #FBC02D; color: #5D4037; }
+        body.theme-5 .btn-tiny { background: #F57F17; color: white; }
     </style>
 </head>
 <body id="body-tag">
 
     <div class="container">
         <div id="pin-section" class="box login-box">
-            <h2>Steven Vault Beta 🔑</h2>
-            <input type="tel" id="pin-input" maxlength="8" placeholder="Inserisci PIN (default 1234)">
+            <h1 style="color:white; margin-bottom:10px;">Steven Vault 💎</h1>
+            <p style="color:#aaa; font-size:14px;">Inserisci il codice segreto</p>
+            <input type="tel" id="pin-input" maxlength="8" placeholder="****">
             <br><br>
-            <button class="primary-btn" onclick="checkPin()">Entra</button>
+            <button class="primary-btn" onclick="checkPin()">ACCEDI</button>
         </div>
 
         <div id="main-app" style="display:none;">
             <div class="top-bar">
-                <button class="btn-tiny" onclick="resetPin()">⚙️ cambia pin</button>
-                <button class="btn-tiny" id="theme-btn">🎨 colore beta</button>
+                <button class="btn-tiny" id="theme-btn">🎨 CAMBIA COLORE</button>
+                <button class="btn-tiny" onclick="resetPin()">⚙️ PIN</button>
             </div>
             <div id="seasons-container"></div>
         </div>
     </div>
 
     <script>
-        // ==========================================
-        // DATABASE VIDEO (AGGIORNATO DAL TUO FOGLIO)
-        // ==========================================
+        // IL TUO DATABASE
         const DATABASE_VIDEO = [
-            { name: "01x01 Gemma lucente - Gem Glow", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987419/Steven.Universe.01x01.Gemma.Lucente.Gem.Glow_jxffcb.mp4" },
-            { name: "01x34 Cocomerino - Watermelon Steven", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987309/Steven.Universe.01x34.Cocomerino.Il.Cocomero.Bambino.Waterme_bka5cy.mp4" },
-            { name: "01x38 Il Test - The Test", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987305/Steven.Universe.01x38.Il.Test.The.Test.2345485.mkv.mp4_at_St_bdoiwl.mp4" },
-            { name: "01x43 Capodanno - Maximum Capacity", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987518/Steven.Universe.01x43.Capodanno.Maximum.Capacity.2345490.mkv_r5wmcl.mp4" },
-            { name: "01x46 Libro aperto - Open Book", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987412/Steven.Universe.01x46.Lib.Aperto.Open.Book.2345493.mkv_f0e8of.mp4" },
-            { name: "01x47 Una magica amicizia - Shirt Club", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987413/Steven.Universe.01x47.Magica.Amicizia.Shirt.Club.2345494.mkv_o39gex.mp4" },
-            { name: "01x48 Una storia per Steven - Story for Steven", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987422/Steven.Universe.01x48.Una.Storia.Per.Steven.Story.For.Steven.2345495.mkv_wukfdf.mp4" },
-            { name: "01x49 Il messaggio - The Message", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987324/Steven.Universe.01x49.Il.Messaggio.The.Message.2345496.mkv_e367cl.mp4" },
-            { name: "01x50 Potere politico - Political Power", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987522/Steven.Universe.01x50.Potere.Politico.Political.Power.2345497.mkv_qg318b.mp4" },
-            { name: "01x51 Il ritorno - The Return", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987525/Steven.Universe.01x51.Il.Ritorno.The.Return.2345498.mkv_vuvndy.mp4" },
-            { name: "01x52 Fuggitivi - Jail Break", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987528/Steven.Universe.01x52.Fuggitivi.Jail.Break.2345499.mkv_e9zshk.mp4" },
-            { name: "03x01 L'isola dei super cocomeri - Super Watermelon Island", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772970695/Steven.Universe.03x01.L.Isola.Dei.Super.Cocomeri.Super.Water_bpeolj.mp4" }
+            { name: "01x01 Gemma lucente", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987419/Steven.Universe.01x01.Gemma.Lucente.Gem.Glow_jxffcb.mp4" },
+            { name: "01x34 Cocomerino", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987309/Steven.Universe.01x34.Cocomerino.Il.Cocomero.Bambino.Waterme_bka5cy.mp4" },
+            { name: "01x38 Il Test", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987305/Steven.Universe.01x38.Il.Test.The.Test.2345485.mkv.mp4_at_St_bdoiwl.mp4" },
+            { name: "01x43 Capodanno", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987518/Steven.Universe.01x43.Capodanno.Maximum.Capacity.2345490.mkv_r5wmcl.mp4" },
+            { name: "01x46 Libro aperto", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987412/Steven.Universe.01x46.Lib.Aperto.Open.Book.2345493.mkv_f0e8of.mp4" },
+            { name: "01x47 Una magica amicizia", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987413/Steven.Universe.01x47.Magica.Amicizia.Shirt.Club.2345494.mkv_o39gex.mp4" },
+            { name: "01x48 Una storia per Steven", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987422/Steven.Universe.01x48.Una.Storia.Per.Steven.Story.For.Steven.2345495.mkv_wukfdf.mp4" },
+            { name: "01x49 Il messaggio", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987324/Steven.Universe.01x49.Il.Messaggio.The.Message.2345496.mkv_e367cl.mp4" },
+            { name: "01x50 Potere politico", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987522/Steven.Universe.01x50.Potere.Politico.Political.Power.2345497.mkv_qg318b.mp4" },
+            { name: "01x51 Il ritorno", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987525/Steven.Universe.01x51.Il.Ritorno.The.Return.2345498.mkv_vuvndy.mp4" },
+            { name: "01x52 Fuggitivi", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987528/Steven.Universe.01x52.Fuggitivi.Jail.Break.2345499.mkv_e9zshk.mp4" },
+            { name: "03x01 L'isola dei super cocomeri", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772970695/Steven.Universe.03x01.L.Isola.Dei.Super.Cocomeri.Super.Water_bpeolj.mp4" }
         ];
 
-        // GESTIONE TEMI COLORE (BETA)
-        const themesCount = 8;
-        let currentThemeId = parseInt(localStorage.getItem('user_theme')) || 0;
-        
-        // Applica il tema salvato all'avvio
-        document.getElementById('body-tag').classList.add(`theme-${currentThemeId}`);
-        document.getElementById('theme-btn').onclick = switchTheme;
+        let currentTheme = parseInt(localStorage.getItem('user_theme')) || 1;
+        document.body.classList.add(`theme-${currentTheme}`);
 
-        function switchTheme() {
-            // Rimuove il vecchio tema
-            document.getElementById('body-tag').classList.remove(`theme-${currentThemeId}`);
-            // Passa al prossimo
-            currentThemeId = (currentThemeId + 1) % themesCount;
-            // Applica e salva
-            document.getElementById('body-tag').classList.add(`theme-${currentThemeId}`);
-            localStorage.setItem('user_theme', currentThemeId);
-            // Mostra notifica veloce
-            document.getElementById('theme-btn').innerText = `🎨 colore: ${currentThemeId}`;
-            setTimeout(() => { document.getElementById('theme-btn').innerText = '🎨 colore beta'; }, 1500);
-        }
+        document.getElementById('theme-btn').onclick = () => {
+            document.body.classList.remove(`theme-${currentTheme}`);
+            currentTheme = (currentTheme % 5) + 1;
+            document.body.classList.add(`theme-${currentTheme}`);
+            localStorage.setItem('user_theme', currentTheme);
+        };
 
-        // GESTIONE ACCESSO
         function checkPin() {
             const input = document.getElementById('pin-input').value;
             const saved = localStorage.getItem('user_pin') || "1234";
             if (input === saved) {
                 document.getElementById('pin-section').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
-                document.getElementById('body-tag').classList.add('logged-in');
+                document.body.classList.add('logged-in');
                 renderizzaStagioni();
             } else { alert("PIN Errato!"); }
         }
 
         function resetPin() { 
-            let nuovo = prompt("Inserisci il nuovo PIN:");
+            let nuovo = prompt("Nuovo PIN:");
             if(nuovo) { localStorage.setItem('user_pin', nuovo); alert("PIN aggiornato!"); }
         }
 
-        // RENDER CATALOGO (Ep. 1, Ep. 2)
         function renderizzaStagioni() {
             const container = document.getElementById('seasons-container');
             container.innerHTML = "";
-            const stagioni = [
-                {id:"01", n:"Stagione 1"}, {id:"02", n:"Stagione 2"}, {id:"03", n:"Stagione 3"},
-                {id:"04", n:"Stagione 4"}, {id:"05", n:"Stagione 5"}, {id:"Film", n:"Film"}, {id:"Future", n:"Future"}
-            ];
+            const stagioni = [{id:"01",n:"Stagione 1"},{id:"03",n:"Stagione 3"}];
 
             stagioni.forEach(cat => {
-                const filtrati = DATABASE_VIDEO.filter(v => {
-                    const nome = v.name.toLowerCase();
-                    if (!isNaN(cat.id)) return nome.includes(cat.id + "x");
-                    return nome.includes(cat.id.toLowerCase());
-                });
-
+                const filtrati = DATABASE_VIDEO.filter(v => v.name.includes(cat.id + "x"));
                 if (filtrati.length === 0) return;
 
                 const tab = document.createElement('div');
                 tab.className = 'season-tab';
-                tab.innerHTML = `<span>📂 ${cat.n}</span> <span>${filtrati.length} ▼</span>`;
+                tab.innerHTML = `<span>📂 ${cat.n}</span> <span>${filtrati.length} ep. ▼</span>`;
                 tab.onclick = () => {
                     const list = tab.nextElementSibling;
-                    const isVis = list.style.display === 'block';
-                    document.querySelectorAll('.episode-list').forEach(l => l.style.display = 'none');
-                    list.style.display = isVis ? 'none' : 'block';
+                    list.style.display = list.style.display === 'block' ? 'none' : 'block';
                 };
 
                 const list = document.createElement('div');
@@ -199,20 +145,15 @@
                     const item = document.createElement('div');
                     item.className = 'episode-item';
                     
-                    // TRASFORMAZIONE NOME: 01x01 -> Ep. 1
-                    let nomeOriginale = vid.name.split('.')[0]; // Pulisce da estensioni
-                    // Cerca il numero dell'episodio dopo la 'x' (es: 01x34 -> 34)
-                    let numEp = nomeOriginale.split('x')[1]?.split(' ')[0] || (i+1);
-                    // Pulisce il titolo (tutto dopo i primi numeri e spazi)
-                    let titolo = nomeOriginale.replace(/\d+x\d+ /, "").replace(/\s*-\s*.+/, "").trim();
-                    
-                    item.innerHTML = `🎬 <b>Ep. ${parseInt(numEp)}</b> ${titolo}`;
+                    // NOME PULITO: Ep. X Titolo
+                    let num = vid.name.split('x')[1]?.split(' ')[0];
+                    let titolo = vid.name.split(' ').slice(1).join(' ');
+                    item.innerHTML = `🎬 <b>Ep. ${parseInt(num)}</b> ${titolo}`;
                     
                     const vTag = document.createElement('video');
                     vTag.controls = true; vTag.src = vid.url;
-                    
-                    item.onclick = (e) => { 
-                        e.stopPropagation(); 
+                    item.onclick = (e) => {
+                        e.stopPropagation();
                         const isVis = vTag.style.display === 'block';
                         document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
                         vTag.style.display = isVis ? 'none' : 'block';
