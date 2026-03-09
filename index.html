@@ -9,27 +9,30 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SU_Streaming">
     
-    <link rel="apple-touch-icon" href="LINK_LOGO_1">
-    <link rel="icon" href="https://res.cloudinary.com/dcsvok2jp/image/upload/v1773007380/Logo_2_nmufb2.jpg">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="apple-touch-icon" href="LINK_DEL_TUO_LOGO_QUI">
+    <link rel="icon" href="LINK_DEL_TUO_LOGO_QUI">
 
     <title>SU_Streaming</title>
+    
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
         body { 
             font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             margin: 0; padding: 10px; transition: 0.5s; background: #1a1a1a; color: white; min-height: 100vh;
-            line-height: 1.4; /* Testo più compatto */
+            line-height: 1.4;
         }
 
         .container { max-width: 500px; margin: auto; }
         
-        /* BOX INTRODUTTIVO OTTIMIZZATO */
+        /* BOX INTRODUTTIVO COMPATTO */
         .intro-box { 
             padding: 15px; border-radius: 18px; margin-bottom: 15px; 
             border: 1px solid rgba(255,255,255,0.1); 
             background: rgba(255,255,255,0.05);
-            font-size: 13.5px; /* Leggermente più piccolo */
+            font-size: 13.5px;
         }
         .intro-box h2 { margin: 0 0 8px 0; font-size: 1.15em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
         .intro-list { list-style: none; padding: 0; margin: 8px 0; }
@@ -85,15 +88,16 @@
             </div>
 
             <div class="intro-box">
-                <h2>Steven Universe: The Collection ✨</h2>
-                Questa web app nasce per raccogliere in un unico posto l'intero universo di Rebecca Sugar. Troverai:
+                <h2>Steven Universe: The Complete Collection ✨</h2>
+                Questa web app nasce dal desiderio di raccogliere in un unico posto l'intero universo creato da Rebecca Sugar. Al suo interno troverai:
                 <ul class="intro-list">
-                    <li>💎 Serie originale (Tutte le stagioni)</li>
+                    <li>💎 Tutte le stagioni della serie originale Steven Universe</li>
                     <li>🎬 Steven Universe: Il Film</li>
                     <li>🌟 Steven Universe Future</li>
                 </ul>
                 <span class="dev-note-title">Nota dello sviluppatore:</span>
-                <span class="dev-note-text">Primo progetto web, in continua evoluzione per migliorare le mie competenze. Sviluppato da Lorenzo Reveglia.</span>
+                <span class="dev-note-text">Essendo il mio primo progetto nel campo dello sviluppo web, l'applicazione potrebbe presentare qualche piccola imperfezione tecnica. È un lavoro in continua evoluzione che mi è servito per testare e migliorare le mie competenze.
+                <br>Sviluppato con passione da Lorenzo Reveglia.</span>
             </div>
 
             <div id="seasons-container"></div>
@@ -101,6 +105,15 @@
     </div>
 
     <script>
+        // Script per attivare il Service Worker (necessario per nascondere la barra URL)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registrato!', reg))
+                .catch(err => console.log('Errore Service Worker', err));
+            });
+        }
+
         const DATABASE_VIDEO = [
             { name: "01x01 Gemma lucente", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987419/Steven.Universe.01x01.Gemma.Lucente.Gem.Glow_jxffcb.mp4" },
             { name: "01x34 Cocomerino", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987309/Steven.Universe.01x34.Cocomerino.Il.Cocomero.Bambino.Waterme_bka5cy.mp4" },
@@ -133,7 +146,6 @@
                 document.getElementById('pin-section').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
                 document.body.classList.add('logged-in');
-                window.scrollTo(0, 1); // Prova a nascondere la barra URL
                 renderizzaStagioni();
             } else { alert("PIN Errato!"); }
         }
