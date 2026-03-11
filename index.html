@@ -13,18 +13,15 @@
     <title>SU_Streaming</title>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        /* Aggiunto overflow-y per forzare lo scorrimento e risolto il blocco su PC */
         html, body { overflow-y: auto; height: auto; min-height: 100vh; }
         body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 10px; transition: 0.5s; background: #1a1a1a; color: white; line-height: 1.4; }
         
-        /* Aggiunto padding-bottom per non far tagliare l'ultima stagione */
         .container { max-width: 500px; margin: auto; padding-bottom: 50px; }
         
         .intro-box { padding: 15px; border-radius: 18px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); font-size: 13.5px; }
         .intro-box h2 { margin: 0 0 8px 0; font-size: 1.15em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
-        .intro-list { list-style: none; padding: 0; margin: 8px 0 0 0; } /* Tolto il margine inferiore per avvicinare la nota */
+        .intro-list { list-style: none; padding: 0; margin: 8px 0 0 0; }
         
-        /* Ridotto lo spazio superiore (margin-top e padding-top) per attaccarlo alla lista */
         .dev-note-title { font-weight: bold; margin-top: 5px; display: block; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; font-size: 0.9em; }
         .dev-note-text { font-size: 0.8em; opacity: 0.75; font-style: italic; display: block; margin-top: 2px; }
         
@@ -32,6 +29,7 @@
         .login-box h1 { font-size: 2em; margin-bottom: 5px; }
         input { padding: 14px; width: 90%; border-radius: 12px; border: none; margin: 15px 0; font-size: 18px; text-align: center; }
         button.primary-btn { border: none; padding: 14px 35px; border-radius: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        
         .top-bar { display: flex; justify-content: space-between; margin-bottom: 15px; }
         .btn-tiny { padding: 8px 15px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 10px; color: white; background: rgba(0,0,0,0.4); }
         
@@ -40,9 +38,10 @@
         .episode-item { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-size: 14px; }
         video { width: 100%; border-radius: 12px; margin-top: 8px; display: none; background: #000; }
         
-        /* PAGINA SEGRETA */
-        #secret-app { text-align: center; margin-top: 35vh; }
-        #secret-app button.primary-btn { font-size: 1.5em; padding: 20px 50px; border-radius: 20px; }
+        /* PAGINA SEGRETA AGGIORNATA */
+        #secret-app { text-align: center; margin-top: 30vh; }
+        #secret-app h2 { font-size: 2em; margin-bottom: 20px; }
+        #secret-app button.primary-btn { font-size: 1.2em; padding: 15px 40px; }
 
         body.theme-1.logged-in { background: #1e1b4b; } body.theme-1 .season-tab, body.theme-1 .intro-box { background: linear-gradient(135deg, #4338ca, #6d28d9); color: white; }
         body.theme-2.logged-in { background: #2e1065; } body.theme-2 .season-tab, body.theme-2 .intro-box { background: linear-gradient(135deg, #7c3aed, #4c1d95); color: white; }
@@ -64,7 +63,7 @@
         </div>
 
         <div id="secret-app" style="display:none;">
-            <button class="primary-btn" onclick="alert('SU_Streaming dice ciao')">Ciao</button>
+            <h2>Ciao</h2> <button class="primary-btn" onclick="alert('SU_Streaming dice ciao')">Premi Qui</button>
             <br><br>
             <button class="btn-tiny" onclick="location.reload()" style="opacity: 0.6;">⬅ Torna indietro</button>
         </div>
@@ -84,7 +83,7 @@
                     <li>🌟 Steven Universe Future</li>
                 </ul>
                 <span class="dev-note-title">Nota dello sviluppatore:</span>
-                <span class="dev-note-text">Essendo il mio primo progetto nel campo dello sviluppo web, l'applicazione potrebbe presentare qualche piccola imperfezione tecnica. È un lavoro in continua evoluzione che mi è servito per testare e migliorare le mie competenze.<br>Sviluppato con passione da Lorenzo Reveglia.</span>
+                <span class="dev-note-text">Essendo il mio primo progetto nel campo dello sviluppo web, l'applicazione potrebbe presentare qualche piccola imperfezione tecnica. È un lavoro in continua evoluzione che mi servirà per testare e migliorare le mie competenze.<br>Sviluppato con passione da Lorenzo Reveglia.</span>
             </div>
 
             <div id="seasons-container"></div>
@@ -93,28 +92,22 @@
     </div>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.log('Errore SW', err)); });
-        }
-
         const DATABASE_VIDEO = [
-            
             // ============================================
             // INCOLLA QUI IL TUO DATABASE DATI COMPLETO
-            // SOSTITUENDO QUESTI 3 EPISODI DI ESEMPIO
             // ============================================ 
             // STAGIONE 1
             { name: "01x01 Gemma lucente - Gem Glow", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772987419/Steven.Universe.01x01.Gemma.Lucente.Gem.Glow_jxffcb.mp4" },
             { name: "01x02 Occhi rossi sul pianeta Terra - Laser Light Cannon", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773078500/Steven.Universe.01x02.Occhi.Rossi.Sul.Pianeta.Terra.Laser.Li_vugrqh.mp4" },
             { name: "01x03 Lo zainetto Cheeseburger - Cheeseburger Backpack", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772988513/Steven.Universe.01x03.Non.Tutte.Le.Ciambelle.Chees.Burger.Ba_u7epbl.mp4" },
-            { name: "01x04 Ora di colazione - Together Breakfast", url: "" },
+            { name: "01x04 Ora di colazione - Together Breakfast", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773250849/Steven.Universe.01x04.Ora.di.colazione.Together.Breakfast.23_jfewce.mp4" },
             { name: "01x05 Ti piacciono le patatine? - Frybo", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773078474/Steven.Universe.01x05.Ti.piacciono.le.patatine.Frybo.2345573_egtkbd.mp4" },
             { name: "01x06 Gatto Steven - Cat Fingers", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773078485/Steven.Universe.01x06.Gatto.Steven.Cat.Fingers.2345572.mkv.m_tosrtg.mp4" },
             { name: "01x07 Amici della bolla - Bubble Buddies", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773078488/Steven.Universe.01x07.Amici.Della.Bolla.Bubble.Buddies.23455_aoqzqi.mp4" },
             { name: "01x08 La giostra del tè - Serious Steven", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1772988503/Steven.Universe.01x08.La.Giostra.Del.T.Serious.Steven.234557_qdeht2.mp4" },
             { name: "01x09 Wrestling - Tiger Millionaire", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773078478/Steven.Universe.01x09.Wrestling.Tiger.Millionaire.2345571.mk_t3dj8o.mp4" },
             { name: "01x10 Il leone rosa - Steven's Lion", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773078484/Steven.Universe.01x10.Il.Leone.Rosa.Steven.s.Lion.2345457.mk_i3xctr.mp4" },
-            { name: "01x11 Mania sala giochi - Arcade Mania", url: "" },
+            { name: "01x11 Mania sala giochi - Arcade Mania", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773250825/Steven.Universe.01x11.Mania.Sala.Giochi.Arcade.Mania.2345458_ko1rrj.mp4" },
             { name: "01x12 Lo scarabeo celeste - Giant Woman", url: "" },
             { name: "01x13 I compleanni non finiscono mai - So Many Birthdays", url: "" },
             { name: "01x14 Amici per il muschio - Lars and the Cool Kids", url: "" },
@@ -177,10 +170,10 @@
             { name: "02x17 La cattura - Catch and Release", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773146945/Steven.Universe.02x17.La.Cattura.Catch.And.Release_stf7qv.mp4" },
             { name: "02x18 La canzone di Sadie - Sadie's Song", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773060661/Steven.Universe.02x18.La.Canzone.Di.Sadie.Sadie.s.Song.23455_yueook.mp4" },
             { name: "02x19 La verità sul Grappolo - When It Rains", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773060666/Steven.Universe.02x19.La.Verita.Sul.Grappolo.When.It.Rains.2_wjb1fv.mp4" },
-            { name: "02x20 Ritorno al fienile - Back to the Barn", url: "" },
+            { name: "02x20 Sfida tra Gemme - Back to the Barn", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773250856/Steven.Universe.02x20.Sfida.Tra.Gemme.Back.To.The.Barn.23455_mhmj7u.mp4" },
             { name: "02x21 La scoperta dei sentimenti - Too Far", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773060622/Steven.Universe.02x21.La.Scoperta.Dei.Sentimenti.Too.Far.234_xdgpaz.mp4" },
-            { name: "02x22 La risposta - The Answer", url: "" },
-            { name: "02x23 Poteva essere bellissimo - It Could've Been Great", url: "" },
+            { name: "02x22 La risposta - The Answer", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773250837/Steven.Universe.02x22.La.Risposta.The.Answer.2345517.mkv.mp4_ptii4l.mp4" },
+            { name: "02x23 La base Lunare - It Could've Been Great", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773250828/Steven.Universe.02x23.La.Base.Lunare.It.Could.Have.Been.Grea_fahvg5.mp4" },
             { name: "02x24 Il compleanno di Steven - Steven's Birthday", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773060652/Steven.Universe.02x24.Il.Compleanno.Di.Steven.Steven.s.Birth_xqb7kx.mp4" },
             { name: "02x25 Una nuova Crystal Gem - Message Received", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773060639/Steven.Universe.02x25.Una.Nuova.Crystal.Gem.Message.Received_ffdfrb.mp4" },
             { name: "02x26 Diario di un incontro - Log Date 7 15 2", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773060647/Steven.Universe.02x26.Diario.Di.Un.Incontro.Log.Date.7.15.2._ymy04k.mp4" },
@@ -268,7 +261,6 @@
             { name: "05x26 QUALCOSA", url: "" },
             { name: "05x27 Di nuovo insieme - Back to the Kindergarten", url: "" },
             { name: "05x28 Change Your Mind (Speciale Finale) - Change Your Mind", url: "" }
-            
         ];
 
         let currentTheme = parseInt(localStorage.getItem('user_theme')) || 1;
@@ -285,19 +277,14 @@
             const inputField = document.getElementById('pin-input');
             const input = inputField.value;
             
-            // Controllo per la STANZA SEGRETA
             if (input === "0000") {
                 document.getElementById('pin-section').style.display = 'none';
                 document.getElementById('secret-app').style.display = 'block';
-                document.body.classList.add('logged-in'); // Applica i colori fighi anche qui
+                document.body.classList.add('logged-in');
                 return;
             }
 
-            let saved = localStorage.getItem('user_pin');
-            if (!saved) {
-                saved = "1234";
-                localStorage.setItem('user_pin', "1234");
-            }
+            let saved = localStorage.getItem('user_pin') || "1234";
 
             if (input === saved) {
                 document.getElementById('pin-section').style.display = 'none';
@@ -305,7 +292,8 @@
                 document.body.classList.add('logged-in');
                 renderizzaStagioni();
             } else { 
-                alert("PIN Errato! Il PIN di base è 1234"); 
+                // Messaggio d'errore modificato come richiesto
+                alert("PIN Errato! Il PIN di base è 0000"); 
                 inputField.value = "";
             }
         }
@@ -316,13 +304,10 @@
 
         function resetPin() { 
             let nuovo = prompt("Nuovo PIN:");
-            
-            // Blocchiamo il PIN 0000 così nessuno può usarlo come PIN normale
             if (nuovo === "0000") {
                 alert("Questo PIN è riservato dal sistema. Scegline un altro!");
                 return;
             }
-
             if(nuovo) { localStorage.setItem('user_pin', nuovo); alert("PIN aggiornato!"); }
         }
 
