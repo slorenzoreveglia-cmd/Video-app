@@ -18,14 +18,9 @@
         
         .container { max-width: 500px; margin: auto; padding-bottom: 50px; }
         
-        /* Intro e Note */
         .intro-box { padding: 15px; border-radius: 18px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); font-size: 13.5px; }
         .intro-box h2 { margin: 0 0 8px 0; font-size: 1.15em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
-        .intro-list { list-style: none; padding: 0; margin: 8px 0 0 0; }
-        .dev-note-title { font-weight: bold; margin-top: 5px; display: block; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; font-size: 0.9em; }
-        .dev-note-text { font-size: 0.8em; opacity: 0.75; font-style: italic; display: block; margin-top: 2px; }
         
-        /* Login */
         .login-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); text-align: center; margin-top: 15vh; border-radius: 25px; padding: 30px 15px; border: 1px solid rgba(255,255,255,0.2); }
         input { padding: 14px; width: 90%; border-radius: 12px; border: none; margin: 15px 0; font-size: 18px; text-align: center; outline: none; }
         button.primary-btn { border: none; padding: 14px 35px; border-radius: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
@@ -33,15 +28,12 @@
         .top-bar { display: flex; justify-content: space-between; margin-bottom: 15px; }
         .btn-tiny { padding: 8px 15px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 10px; color: white; background: rgba(0,0,0,0.4); }
         
-        /* Stagioni */
         .season-tab { padding: 18px; border-radius: 15px; margin-top: 10px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
         .episode-list { display: none; padding: 5px; border-radius: 0 0 15px 15px; margin-top: -5px; background: rgba(255,255,255,0.05); }
         
-        /* Layout Episodio Corretto */
         .episode-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
         
-        /* Checkbox */
-        .check-area { padding: 4px; display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .check-area { padding: 4px; display: flex; align-items: center; justify-content: center; z-index: 5; }
         .check-box { 
             min-width: 22px; height: 22px; border: 2px solid rgba(255,255,255,0.3); 
             border-radius: 7px; display: flex; align-items: center; justify-content: center; 
@@ -50,15 +42,21 @@
         .check-box.checked { background: #fff; border-color: #fff; }
         .check-box.checked::after { content: '✓'; color: black; font-weight: bold; font-size: 14px; }
 
-        .episode-content { flex-grow: 1; pointer-events: none; } /* Impedisce interferenze col checkbox */
-        .title-row { display: flex; gap: 6px; align-items: flex-start; pointer-events: auto; }
+        .episode-content { flex-grow: 1; }
+        .title-row { display: flex; gap: 6px; align-items: flex-start; }
         .ep-label { color: rgba(255,255,255,0.5); font-size: 14px; white-space: nowrap; }
         .title-it { font-weight: 500; font-size: 14px; color: #fff; }
-        .title-en { font-size: 11px; opacity: 0.5; display: block; margin-top: 1px; margin-left: 28px; pointer-events: auto; }
+        .title-en { font-size: 11px; opacity: 0.5; display: block; margin-top: 1px; margin-left: 28px; }
         
-        video { width: 100%; border-radius: 12px; margin-top: 10px; display: none; background: #000; pointer-events: auto; }
+        video { width: 100%; border-radius: 12px; margin-top: 10px; display: none; background: #000; }
         
-        /* Segreto */
+        /* Tasti Bulk Spunte */
+        .bulk-actions { padding: 15px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .bulk-btn { font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: underline; text-align: center; opacity: 0.8; }
+        .bulk-btn:active { opacity: 1; }
+        .bulk-green { color: #4ade80; }
+        .bulk-red { color: #f87171; }
+
         #secret-app { text-align: center; margin-top: 30vh; }
         #secret-message { font-size: 2.5em; font-weight: bold; height: 60px; margin-bottom: 20px; opacity: 0; transition: opacity 0.3s; }
 
@@ -73,26 +71,22 @@
 </head>
 <body>
     <div class="container">
-        
         <div id="pin-section" class="login-box">
             <h1>SU_Streaming</h1>
-            <p style="opacity:0.7; font-size: 0.9em;">Inserisci il PIN per accedere</p>
             <input type="tel" id="pin-input" maxlength="8" placeholder="****" autocomplete="off">
-            <br>
-            <button class="primary-btn" onclick="checkPin()">Accedi</button>
+            <br><button class="primary-btn" onclick="checkPin()">Accedi</button>
         </div>
 
         <div id="secret-app" style="display:none;">
             <div id="secret-message">Ciao</div> 
             <button class="primary-btn" onclick="mostraCiao()">Premi Qui</button>
-            <br><br>
-            <button class="btn-tiny" onclick="location.reload()" style="opacity: 0.6;">⬅ Torna indietro</button>
+            <br><br><button class="btn-tiny" onclick="location.reload()">⬅ Torna</button>
         </div>
 
         <div id="main-app" style="display:none;">
             <div class="top-bar">
                 <button class="btn-tiny" onclick="resetPin()">⚙️ PIN</button>
-                <button class="btn-tiny" id="theme-btn" style="background: white; color: black;">🎨 COLORE</button>
+                <button class="btn-tiny" id="theme-btn" style="background:white;color:black">🎨 COLORE</button>
             </div>
             
             <div class="intro-box">
@@ -104,7 +98,7 @@
                     <li>🌟 Steven Universe Future</li>
                 </ul>
                 <span class="dev-note-title">Nota dello sviluppatore:</span>
-                <span class="dev-note-text">Essendo il mio primo progetto nel campo dello sviluppo web, l'applicazione potrebbe presentare qualche piccola imperfezione tecnica. È un lavoro in continua evoluzione che mi è servito per testare e migliorare le mie competenze.<br>Sviluppato con passione da Lorenzo Reveglia.</span>
+                <span class="dev-note-text">Essendo il mio primo progetto nel campo dello sviluppo web, l'applicazione potrebbe presentare qualche piccola imperfezione tecnica. È un lavoro in continua evoluzione che mi servirà per testare e migliorare le mie competenze.<br>Sviluppato con passione da Lorenzo Reveglia.</span>
             </div>
 
             <div id="seasons-container"></div>
@@ -289,27 +283,24 @@
         function toggleWatch(event, epName) {
             event.stopPropagation();
             const index = watchedEpisodes.indexOf(epName);
-            if (index > -1) { watchedEpisodes.splice(index, 1); } 
-            else { watchedEpisodes.push(epName); }
-            localStorage.setItem('watched_eps', JSON.stringify(watchedEpisodes));
-            renderizzaStagioni();
+            if (index > -1) watchedEpisodes.splice(index, 1);
+            else watchedEpisodes.push(epName);
+            saveAndRefresh();
         }
 
-        function checkPin() {
-            const input = document.getElementById('pin-input').value;
-            if (input === "0000") {
-                document.getElementById('pin-section').style.display = 'none';
-                document.getElementById('secret-app').style.display = 'block';
-                document.body.classList.add('logged-in');
-                return;
-            }
-            let saved = localStorage.getItem('user_pin') || "1234";
-            if (input === saved) {
-                document.getElementById('pin-section').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-                document.body.classList.add('logged-in');
-                renderizzaStagioni();
-            } else { alert("PIN Errato! Il PIN di base è 0000"); }
+        function bulkAction(catId, action) {
+            const filtrati = DATABASE_VIDEO.filter(v => v.name.includes(catId + "x") || (catId === "Film" && v.name.includes("Film")));
+            filtrati.forEach(vid => {
+                const idx = watchedEpisodes.indexOf(vid.name);
+                if (action === 'check' && idx === -1) watchedEpisodes.push(vid.name);
+                else if (action === 'uncheck' && idx > -1) watchedEpisodes.splice(idx, 1);
+            });
+            saveAndRefresh();
+        }
+
+        function saveAndRefresh() {
+            localStorage.setItem('watched_eps', JSON.stringify(watchedEpisodes));
+            renderizzaStagioni();
         }
 
         function renderizzaStagioni() {
@@ -320,8 +311,7 @@
             const stagioni = [
                 {id:"01", n:"Stagione 1"}, {id:"02", n:"Stagione 2"},
                 {id:"03", n:"Stagione 3"}, {id:"04", n:"Stagione 4"},
-                {id:"05", n:"Stagione 5"}, {id:"06", n:"Future"},
-                {id:"Film", n:"Il Film"}
+                {id:"05", n:"Stagione 5"}, {id:"06", n:"Future"}, {id:"Film", n:"Il Film"}
             ];
             
             stagioni.forEach(cat => {
@@ -329,11 +319,9 @@
                 if (filtrati.length === 0) return;
                 
                 const completata = filtrati.every(v => watchedEpisodes.includes(v.name));
-                const spuntaStagione = completata ? "✅ " : "";
-
                 const tab = document.createElement('div');
                 tab.className = 'season-tab';
-                tab.innerHTML = `<span>${spuntaStagione}📂 ${cat.n}</span> <span>${filtrati.length} ep.</span>`;
+                tab.innerHTML = `<span>${completata ? "✅ " : ""}📂 ${cat.n}</span> <span>${filtrati.length} ep.</span>`;
                 
                 const list = document.createElement('div');
                 list.className = 'episode-list';
@@ -349,42 +337,63 @@
                 filtrati.sort((a, b) => a.name.localeCompare(b.name)).forEach((vid) => {
                     const item = document.createElement('div');
                     item.className = 'episode-item';
-                    
                     let parti = vid.name.split(' - ');
-                    let titoloItaCompleto = parti[0];
-                    let titoloEng = parti[1] || "";
-                    
-                    let numLabel = titoloItaCompleto.includes('x') ? `Ep. ${parseInt(titoloItaCompleto.split('x')[1])}` : "Special";
-                    let soloTitoloIta = titoloItaCompleto.split(' ').slice(1).join(' ');
-                    const isChecked = watchedEpisodes.includes(vid.name) ? 'checked' : '';
-
-                    // Usiamo apici singoli per gestire nomi con apostrofi
+                    let numLabel = parti[0].includes('x') ? `Ep. ${parseInt(parti[0].split('x')[1])}` : "Special";
+                    let soloIta = parti[0].split(' ').slice(1).join(' ');
                     const safeName = vid.name.replace(/'/g, "\\'");
 
                     item.innerHTML = `
                         <div class="check-area" onclick="toggleWatch(event, '${safeName}')">
-                            <div class="check-box ${isChecked}"></div>
+                            <div class="check-box ${watchedEpisodes.includes(vid.name) ? 'checked' : ''}"></div>
                         </div>
-                        <div class="episode-content">
-                            <div class="title-row" onclick="openVideo(this)">
+                        <div class="episode-content" onclick="openVideo(this)">
+                            <div class="title-row">
                                 <span class="ep-label">🎬 ${numLabel}</span>
-                                <span class="title-it">${soloTitoloIta}</span>
+                                <span class="title-it">${soloIta}</span>
                             </div>
-                            <span class="title-en" onclick="openVideo(this)">${titoloEng}</span>
-                            <video controls src="${vid.url}" playsinline></video>
+                            <span class="title-en">${parti[1] || ""}</span>
+                            <video controls src="${vid.url}" playsinline preload="metadata"></video>
                         </div>
                     `;
                     list.appendChild(item);
                 });
+
+                // Aggiunta tasti bulk
+                const bulkDiv = document.createElement('div');
+                bulkDiv.className = 'bulk-actions';
+                bulkDiv.innerHTML = `
+                    <div class="bulk-btn bulk-green" onclick="bulkAction('${cat.id}', 'check')">Segna stagione come completata</div>
+                    <div class="bulk-btn bulk-red" onclick="bulkAction('${cat.id}', 'uncheck')">Svuota i completati della stagione</div>
+                `;
+                list.appendChild(bulkDiv);
                 container.appendChild(tab); container.appendChild(list);
             });
         }
 
         function openVideo(el) {
-            const vTag = el.parentElement.querySelector('video');
+            const vTag = el.querySelector('video');
             const isVis = vTag.style.display === 'block';
             document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
-            vTag.style.display = isVis ? 'none' : 'block';
+            if (!isVis) { vTag.style.display = 'block'; vTag.play().catch(e => console.log("Play bloccato")); }
+        }
+
+        function checkPin() {
+            const input = document.getElementById('pin-input').value;
+            if (input === "0000") {
+                document.getElementById('pin-section').style.display='none';
+                document.getElementById('secret-app').style.display='block';
+                document.body.classList.add('logged-in');
+            } else if (input === (localStorage.getItem('user_pin') || "1234")) {
+                document.getElementById('pin-section').style.display='none';
+                document.getElementById('main-app').style.display='block';
+                document.body.classList.add('logged-in');
+                renderizzaStagioni();
+            } else { alert("PIN Errato! Il PIN di base è 0000"); }
+        }
+
+        function mostraCiao() {
+            const msg = document.getElementById('secret-message');
+            msg.style.opacity = "1"; setTimeout(() => msg.style.opacity = "0", 2000);
         }
 
         let currentTheme = parseInt(localStorage.getItem('user_theme')) || 1;
@@ -395,16 +404,10 @@
             document.body.classList.add(`theme-${currentTheme}`);
             localStorage.setItem('user_theme', currentTheme);
         };
-
-        function mostraCiao() {
-            const msg = document.getElementById('secret-message');
-            msg.style.opacity = "1";
-            setTimeout(() => { msg.style.opacity = "0"; }, 2000);
-        }
-
+        
         function resetPin() { 
             let nuovo = prompt("Nuovo PIN:");
-            if (nuovo === "0000") { alert("Riservato! Pin di sistema!"); return; }
+            if (nuovo === "0000") return;
             if(nuovo) { localStorage.setItem('user_pin', nuovo); alert("PIN aggiornato!"); }
         }
     </script>
