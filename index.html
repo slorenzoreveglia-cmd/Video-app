@@ -291,7 +291,8 @@
             { name: "06x20 ", url: "" },
             
             // FILM
-            { name: "Film Steven Universe: Il Film - Steven Universe: The Movie", url: "" }
+            { name: "Filmx01 Steven Universe: Il Film (pt.1) - Steven Universe: The Movie (pt.1)", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773769926/Steven_Universe_Future__s1___e1___1_t5bpdp.mp4" }
+            { name: "Filmx02 Steven Universe: Il Film (pt.2) - Steven Universe: The Movie (pt.2)", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773769926/Steven_Universe_Future__s1___e1___1_t5bpdp.mp4" }
             
         ];
 
@@ -339,9 +340,7 @@
                 const tab = document.createElement('div');
                 tab.className = 'season-tab';
                 
-                let barraHtml = "";
-                if (cat.id !== "Film") {
-                    barraHtml = `
+                let barraHtml = `
                         <div class="progress-container"><div class="progress-bar" style="width: ${perc}%"></div></div>
                         <div class="progress-info"><span>Progresso</span><span>${perc}%</span></div>
                     `;
@@ -366,8 +365,14 @@
                 filtrati.sort((a, b) => a.name.localeCompare(b.name)).forEach((vid) => {
                     const item = document.createElement('div');
                     item.className = 'episode-item';
-                    let parti = vid.name.split(' - ');
-                    let numLabel = parti[0].includes('x') ? `Ep. ${parseInt(parti[0].split('x')[1])}` : "Special";
+                    let parti = vid.name.split(' - ');// Selezioniamo cosa scrivere in grigetto (numLabel)
+                    let numLabel = "";
+                    if (cat.id === "Film") {
+                        numLabel = ""; // Per il film lo lasciamo vuoto, così nasconde "Ep. 1"
+                    } else {
+                        numLabel = parti[0].includes('x') ? `Ep. ${parseInt(parti[0].split('x')[1])}` : "Special";
+                    }
+                    
                     let soloIta = parti[0].split(' ').slice(1).join(' ');
                     const safeName = vid.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     item.innerHTML = `
@@ -380,7 +385,7 @@
                                 <span class="title-it">${soloIta}</span>
                             </div>
                             <span class="title-en">${parti[1] || ""}</span>
-                            <video controls src="${vid.url}" playsinline preload="metadata"></video>
+                            <video controls src="${vid.url}" playsinline preload="metadata" onended="videoFinito('${safeName}', this)"></video>
                         </div>
                     `;
                     list.appendChild(item);
@@ -400,7 +405,35 @@
             document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
             if (!isVis) { vTag.style.display = 'block'; }
         }
+        function videoFinito(epName, videoElement) {
+            // 1. Mette la spunta automatica all'episodio appena finito
+            if (!watchedEpisodes.includes(epName)) {
+                watchedEpisodes.push(epName);
+                localStorage.setItem('watched_eps', JSON.stringify(watchedEpisodes));
+                
+                // Colora il quadratino subito
+                const currentItem = videoElement.closest('.episode-item');
+                const checkBox = currentItem.querySelector('.check-box');
+                if (checkBox) checkBox.classList.add('checked');
+            }
 
+            // 2. Cerca l'episodio/parte successiva
+            const currentItem = videoElement.closest('.episode-item');
+            const nextItem = currentItem.nextElementSibling;
+            
+            if (nextItem && nextItem.classList.contains('episode-item')) {
+                // Se c'è un video successivo, lo apre e fa "Play" in automatico!
+                const nextVideo = nextItem.querySelector('video');
+                if (nextVideo) {
+                    document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
+                    nextVideo.style.display = 'block';
+                    nextVideo.play().catch(e => console.log("Autoplay bloccato dal browser"));
+                }
+            } else {
+                // Se era l'ultimo video della lista, ricarica per aggiornare le percentuali a 100%
+                renderizzaStagioni();
+            }
+        }
         function checkPin() {
             const input = document.getElementById('pin-input').value;
             if (input === "0000") {
