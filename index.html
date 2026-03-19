@@ -403,7 +403,7 @@ function openVideo(el) {
             const vTag = el.querySelector('video');
             const isVis = vTag.style.display === 'block';
             document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
-            if (!isVis) { vTag.style.display = 'block'; }
+            if (!isVis) vTag.style.display = 'block';
         }
 
         function videoFinito(epName, videoElement) {
@@ -423,7 +423,7 @@ function openVideo(el) {
             const nextItem = currentItem.nextElementSibling;
             
             if (nextItem && nextItem.classList.contains('episode-item')) {
-                // Se c'è un video successivo, lo apre e fa "Play" in automatico!
+                // Se c'è un video successivo, lo apre e fa "Play" in automatico
                 const nextVideo = nextItem.querySelector('video');
                 if (nextVideo) {
                     document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
@@ -447,7 +447,9 @@ function openVideo(el) {
                 document.getElementById('main-app').style.display='block';
                 document.body.classList.add('logged-in');
                 renderizzaStagioni();
-            } else { alert("PIN Errato! Il PIN di base è 0000"); }
+            } else { 
+                alert("PIN Errato! Il PIN di base è 0000"); 
+            }
         }
 
         function mostraCiao() {
