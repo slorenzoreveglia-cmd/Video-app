@@ -12,57 +12,54 @@
     <link rel="manifest" href="manifest.json">
     <title>SU_Streaming</title>
     <style>
+        /* Sovrascriviamo la tendina per farci stare la barra */
+        .season-tab { flex-direction: column; align-items: stretch; gap: 8px; }
+        .season-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        
+        /* Stile Barra Progresso */
+        .progress-container { width: 100%; background: rgba(255,255,255,0.2); height: 6px; border-radius: 10px; overflow: hidden; display: flex; }
+        .progress-bar { height: 100%; background: #fff; transition: width 0.4s ease; }
+        .progress-info { display: flex; justify-content: space-between; width: 100%; font-size: 10px; opacity: 0.8; font-weight: normal; margin-top: 2px; }
+
+        /* NUOVI TEMI (6 e 7) */
+        body.theme-6.logged-in { background: #0f172a; } body.theme-6 .season-tab, body.theme-6 .intro-box { background: radial-gradient(circle at top left, #38bdf8, #4f46e5, #1e1b4b); color: white; }
+        body.theme-7.logged-in { background: #1c1917; } body.theme-7 .season-tab, body.theme-7 .intro-box { background: linear-gradient(135deg, #7c3aed, #db2777, #f59e0b); color: white; }
+        
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         html, body { overflow-y: auto; height: auto; min-height: 100vh; }
         body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 10px; transition: 0.5s; background: #1a1a1a; color: white; line-height: 1.4; }
         .container { max-width: 500px; margin: auto; padding-bottom: 50px; }
-        
-        /* Login */
+        .intro-box { padding: 15px; border-radius: 18px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); font-size: 13.5px; }
+        .intro-box h2 { margin: 0 0 8px 0; font-size: 1.15em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
         .login-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); text-align: center; margin-top: 15vh; border-radius: 25px; padding: 30px 15px; border: 1px solid rgba(255,255,255,0.2); }
         input { padding: 14px; width: 90%; border-radius: 12px; border: none; margin: 15px 0; font-size: 18px; text-align: center; outline: none; }
         button.primary-btn { border: none; padding: 14px 35px; border-radius: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
-        
         .top-bar { display: flex; justify-content: space-between; margin-bottom: 15px; }
         .btn-tiny { padding: 8px 15px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 10px; color: white; background: rgba(0,0,0,0.4); }
-        
-        /* Stagioni */
-        .season-tab { padding: 15px; border-radius: 15px; margin-top: 10px; cursor: pointer; display: flex; flex-direction: column; gap: 8px; }
-        .season-header { display: flex; justify-content: space-between; align-items: center; width: 100%; font-weight: bold; font-size: 14px; }
-        
-        /* Barra Progresso */
-        .progress-container { width: 100%; background: rgba(255,255,255,0.2); height: 6px; border-radius: 10px; overflow: hidden; display: flex; align-items: center; }
-        .progress-bar { height: 100%; background: #fff; transition: width 0.4s ease; }
-        .progress-info { display: flex; justify-content: space-between; width: 100%; font-size: 10px; opacity: 0.9; font-weight: normal; }
-
+        .season-tab { padding: 18px; border-radius: 15px; margin-top: 10px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
         .episode-list { display: none; padding: 5px; border-radius: 0 0 15px 15px; margin-top: -5px; background: rgba(255,255,255,0.05); }
         .episode-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
         .check-area { padding: 4px; display: flex; align-items: center; justify-content: center; z-index: 5; }
         .check-box { min-width: 22px; height: 22px; border: 2px solid rgba(255,255,255,0.3); border-radius: 7px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); transition: 0.2s; }
         .check-box.checked { background: #fff; border-color: #fff; }
         .check-box.checked::after { content: '✓'; color: black; font-weight: bold; font-size: 14px; }
-        
         .episode-content { flex-grow: 1; }
         .title-row { display: flex; gap: 6px; align-items: flex-start; }
         .ep-label { color: rgba(255,255,255,0.5); font-size: 14px; white-space: nowrap; }
         .title-it { font-weight: 500; font-size: 14px; color: #fff; }
         .title-en { font-size: 11px; opacity: 0.5; display: block; margin-top: 1px; margin-left: 28px; }
         video { width: 100%; border-radius: 12px; margin-top: 10px; display: none; background: #000; }
-        
         .bulk-actions { padding: 15px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
         .bulk-btn { font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: underline; text-align: center; opacity: 0.8; }
         .bulk-green { color: #4ade80; }
         .bulk-red { color: #f87171; }
-
-        /* TEMI */
-        body.theme-1.logged-in { background: #1e1b4b; } body.theme-1 .season-tab { background: linear-gradient(135deg, #4338ca, #6d28d9); }
-        body.theme-2.logged-in { background: #2e1065; } body.theme-2 .season-tab { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
-        body.theme-3.logged-in { background: #2d0630; } body.theme-3 .season-tab { background: linear-gradient(135deg, #701a75, #d946ef); }
-        body.theme-4.logged-in { background: #083344; } body.theme-4 .season-tab { background: linear-gradient(135deg, #0e7490, #0891b2); }
-        body.theme-5.logged-in { background: #042f2e; } body.theme-5 .season-tab { background: linear-gradient(135deg, #0f766e, #14b8a6); }
-        /* Nuovi Temi Punto Luce */
-        body.theme-6.logged-in { background: #0f172a; } body.theme-6 .season-tab { background: radial-gradient(circle at top left, #38bdf8, #4f46e5, #1e1b4b); }
-        body.theme-7.logged-in { background: #1c1917; } body.theme-7 .season-tab { background: linear-gradient(135deg, #7c3aed, #db2777, #f59e0b); }
-
+        #secret-app { text-align: center; margin-top: 30vh; }
+        #secret-message { font-size: 2.5em; font-weight: bold; height: 60px; margin-bottom: 20px; opacity: 0; transition: opacity 0.3s; }
+        body.theme-1.logged-in { background: #1e1b4b; } body.theme-1 .season-tab, body.theme-1 .intro-box { background: linear-gradient(135deg, #4338ca, #6d28d9); }
+        body.theme-2.logged-in { background: #2e1065; } body.theme-2 .season-tab, body.theme-2 .intro-box { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+        body.theme-3.logged-in { background: #2d0630; } body.theme-3 .season-tab, body.theme-3 .intro-box { background: linear-gradient(135deg, #701a75, #d946ef); }
+        body.theme-4.logged-in { background: #083344; } body.theme-4 .season-tab, body.theme-4 .intro-box { background: linear-gradient(135deg, #0e7490, #0891b2); }
+        body.theme-5.logged-in { background: #042f2e; } body.theme-5 .season-tab, body.theme-5 .intro-box { background: linear-gradient(135deg, #0f766e, #14b8a6); }
         body.logged-in .check-box.checked::after { color: inherit; filter: brightness(0.5); }
     </style>
 </head>
@@ -73,7 +70,11 @@
             <input type="tel" id="pin-input" maxlength="8" placeholder="****" autocomplete="off">
             <br><button class="primary-btn" onclick="checkPin()">Accedi</button>
         </div>
-
+        <div id="secret-app" style="display:none;">
+            <div id="secret-message">Ciao</div> 
+            <button class="primary-btn" onclick="mostraCiao()">Premi Qui</button>
+            <br><br><button class="btn-tiny" onclick="location.reload()">⬅ Torna</button>
+        </div>
         <div id="main-app" style="display:none;">
             <div class="top-bar">
                 <button class="btn-tiny" onclick="resetPin()">⚙️ PIN</button>
@@ -96,7 +97,6 @@
         </div>
 
     </div>
-
     <script>
         const DATABASE_VIDEO = [
             // ============================================
@@ -302,23 +302,24 @@
                 {id:"01", n:"Stagione 1"}, {id:"02", n:"Stagione 2"}, {id:"03", n:"Stagione 3"}, 
                 {id:"04", n:"Stagione 4"}, {id:"05", n:"Stagione 5"}, {id:"06", n:"Future"}, {id:"Film", n:"Il Film"}
             ];
-            
             stagioni.forEach(cat => {
                 const filtrati = DATABASE_VIDEO.filter(v => v.name.includes(cat.id + "x") || (cat.id === "Film" && v.name.includes("Film")));
                 if (filtrati.length === 0) return;
-                
                 const visti = filtrati.filter(v => watchedEpisodes.includes(v.name)).length;
                 const totale = filtrati.length;
                 const perc = Math.round((visti / totale) * 100);
-                const completata = visti === totale;
+                const completata = (visti === totale);
 
                 const tab = document.createElement('div');
                 tab.className = 'season-tab';
                 
-                let barraHtml = cat.id !== "Film" ? `
-                    <div class="progress-container"><div class="progress-bar" style="width: ${perc}%"></div></div>
-                    <div class="progress-info"><span>Progresso</span><span>${perc}%</span></div>
-                ` : "";
+                let barraHtml = "";
+                if (cat.id !== "Film") {
+                    barraHtml = `
+                        <div class="progress-container"><div class="progress-bar" style="width: ${perc}%"></div></div>
+                        <div class="progress-info"><span>Progresso</span><span>${perc}%</span></div>
+                    `;
+                }
 
                 tab.innerHTML = `
                     <div class="season-header">
@@ -327,18 +328,15 @@
                     </div>
                     ${barraHtml}
                 `;
-
                 const list = document.createElement('div');
                 list.className = 'episode-list';
                 list.id = "list-" + cat.id;
                 if(openSeasonId === list.id) list.style.display = "block";
-                
                 tab.onclick = () => {
                     const isVis = list.style.display === 'block';
                     document.querySelectorAll('.episode-list').forEach(l => l.style.display = 'none');
                     list.style.display = isVis ? 'none' : 'block';
                 };
-
                 filtrati.sort((a, b) => a.name.localeCompare(b.name)).forEach((vid) => {
                     const item = document.createElement('div');
                     item.className = 'episode-item';
@@ -361,7 +359,6 @@
                     `;
                     list.appendChild(item);
                 });
-
                 const bulkDiv = document.createElement('div');
                 bulkDiv.className = 'bulk-actions';
                 bulkDiv.innerHTML = `<div class="bulk-btn bulk-green" onclick="bulkAction('${cat.id}', 'check')">Segna stagione come completata</div>
@@ -375,7 +372,7 @@
             const vTag = el.querySelector('video');
             const isVis = vTag.style.display === 'block';
             document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
-            if (!isVis) vTag.style.display = 'block';
+            if (!isVis) { vTag.style.display = 'block'; }
         }
 
         function checkPin() {
@@ -401,7 +398,7 @@
         document.body.classList.add(`theme-${currentTheme}`);
         document.getElementById('theme-btn').onclick = () => {
             document.body.classList.remove(`theme-${currentTheme}`);
-            currentTheme = (currentTheme % 5) + 1;
+            currentTheme = (currentTheme % 7) + 1;
             document.body.classList.add(`theme-${currentTheme}`);
             localStorage.setItem('user_theme', currentTheme);
         };
