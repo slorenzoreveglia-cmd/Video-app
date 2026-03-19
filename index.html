@@ -399,12 +399,13 @@
             });
         }
 
-        function openVideo(el) {
+function openVideo(el) {
             const vTag = el.querySelector('video');
             const isVis = vTag.style.display === 'block';
             document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
             if (!isVis) { vTag.style.display = 'block'; }
         }
+
         function videoFinito(epName, videoElement) {
             // 1. Mette la spunta automatica all'episodio appena finito
             if (!watchedEpisodes.includes(epName)) {
@@ -434,6 +435,7 @@
                 renderizzaStagioni();
             }
         }
+
         function checkPin() {
             const input = document.getElementById('pin-input').value;
             if (input === "0000") {
