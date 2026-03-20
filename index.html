@@ -405,7 +405,7 @@ function openVideo(el) {
             if (!isVis) vTag.style.display = 'block';
         }
 
-        function videoFinito(epName, videoElement) {
+function videoFinito(epName, videoElement) {
             // 1. Mette la spunta automatica all'episodio appena finito
             if (!watchedEpisodes.includes(epName)) {
                 watchedEpisodes.push(epName);
@@ -422,12 +422,34 @@ function openVideo(el) {
             const nextItem = currentItem.nextElementSibling;
             
             if (nextItem && nextItem.classList.contains('episode-item')) {
-                // Se c'è un video successivo, lo apre e fa "Play" in automatico
+                
+                // NOVITÀ: Controlliamo se eravamo in Full Screen
+                const isFullScreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+                
                 const nextVideo = nextItem.querySelector('video');
                 if (nextVideo) {
+                    
+                    // Se siamo in Full Screen, prima usciamo in modo pulito per non far impallare il browser
+                    if (isFullScreen && document.exitFullscreen) {
+                        document.exitFullscreen().catch(err => console.log(err));
+                    } else if (isFullScreen && document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    }
+
+                    // Nascondiamo i vecchi e mostriamo il nuovo
                     document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
                     nextVideo.style.display = 'block';
-                    nextVideo.play().catch(e => console.log("Autoplay bloccato dal browser"));
+                    
+                    // Facciamo partire il video nuovo e poi tentiamo di rimetterlo in Full Screen
+                    nextVideo.play().then(() => {
+                        if (isFullScreen) {
+                            if (nextVideo.requestFullscreen) {
+                                nextVideo.requestFullscreen();
+                            } else if (nextVideo.webkitRequestFullscreen) {
+                                nextVideo.webkitRequestFullscreen();
+                            }
+                        }
+                    }).catch(e => console.log("Autoplay bloccato dal browser"));
                 }
             } else {
                 // Se era l'ultimo video della lista, ricarica per aggiornare le percentuali a 100%
