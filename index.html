@@ -75,6 +75,20 @@
             <button class="primary-btn" onclick="mostraCiao()">Premi Qui</button>
             <br><br><button class="btn-tiny" onclick="location.reload()">⬅ Torna</button>
         </div>
+        //aggiunta
+<div id="bivio-section" style="display:none; text-align:center; padding-top: 20vh;">
+        <h1 style="color: white; margin-bottom: 40px;">Di quale servizio vuoi usufruire?</h1>
+        <div style="display: flex; justify-content: center; gap: 20px;">
+            <button onclick="apriStreaming()" style="padding: 20px 40px; font-size: 20px; border-radius: 10px; border: none; background: #e50914; color: white; cursor: pointer; font-weight: bold;">🎬 Streaming</button>
+            <button onclick="apriMusica()" style="padding: 20px 40px; font-size: 20px; border-radius: 10px; border: none; background: #1DB954; color: white; cursor: pointer; font-weight: bold;">🎵 Spotify</button>
+        </div>
+    </div>
+
+    <div id="music-app" style="display:none; padding: 20px;">
+        <h1 style="color: white; text-align: center;">🎵 Sezione Musica in Costruzione...</h1>
+        <button onclick="tornaAlBivio()" style="padding: 10px; margin-bottom: 20px; background: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">⬅ Torna al Menu</button>
+        </div>
+        //fine aggiunta
         <div id="main-app" style="display:none;">
             <div class="top-bar">
                 <button class="btn-tiny" onclick="resetPin()">⚙️ PIN</button>
@@ -459,19 +473,43 @@ function videoFinito(epName, videoElement) {
 
         function checkPin() {
             const input = document.getElementById('pin-input').value;
+            // Se il pin è quello di base (0000) ti manda ancora alle impostazioni segrete
             if (input === "0000") {
                 document.getElementById('pin-section').style.display='none';
                 document.getElementById('secret-app').style.display='block';
                 document.body.classList.add('logged-in');
-            } else if (input === (localStorage.getItem('user_pin') || "1234")) {
+            } 
+            // Se il pin è corretto, ORA TI MANDA AL BIVIO!
+            else if (input === (localStorage.getItem('user_pin') || "1234")) {
                 document.getElementById('pin-section').style.display='none';
-                document.getElementById('main-app').style.display='block';
+                document.getElementById('bivio-section').style.display='block'; // Apre il bivio
                 document.body.classList.add('logged-in');
-                renderizzaStagioni();
             } else { 
                 alert("PIN Errato! Il PIN di base è 0000"); 
             }
         }
+
+        // Funzioni per i bottoni del Bivio
+        function apriStreaming() {
+            document.getElementById('bivio-section').style.display='none';
+            document.getElementById('main-app').style.display='block';
+            renderizzaStagioni();
+        }
+
+        function apriMusica() {
+            document.getElementById('bivio-section').style.display='none';
+            document.getElementById('music-app').style.display='block';
+            // Qui in futuro caricheremo le playlist
+        }
+
+        function tornaAlBivio() {
+            // Ferma video o musica se stiamo tornando indietro
+            document.querySelectorAll('video, audio').forEach(media => media.pause());
+            document.getElementById('main-app').style.display='none';
+            document.getElementById('music-app').style.display='none';
+            document.getElementById('bivio-section').style.display='block';
+        }
+        //fine modifica
 
         function mostraCiao() {
             const msg = document.getElementById('secret-message');
