@@ -88,10 +88,25 @@
         </div>
     </div>
 
-    <div id="music-app" style="display:none; padding: 20px;">
-        <h1 style="color: white; text-align: center;">🎵 Sezione Musica in Costruzione...</h1>
+    <div id="music-app" style="display:none; padding: 20px; max-width: 800px; margin: auto;">
+        
         <button onclick="apriStreaming()" style="padding: 10px 20px; margin-bottom: 20px; background: #e50914; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🎬 Passa a Streaming</button>
+        
+        <div style="background: rgba(0,0,0,0.8); padding: 15px; border-radius: 15px; margin-bottom: 30px; text-align: center; border: 2px solid #1DB954;">
+            <h3 id="titolo-brano-corrente" style="color: #1DB954; margin-top: 0;">Nessun brano in riproduzione</h3>
+            <audio id="player-audio" controls style="width: 100%; outline: none;"></audio>
         </div>
+
+        <h2 style="color: white; border-bottom: 2px solid #555; padding-bottom: 5px;">🎧 Playlist Ufficiali</h2>
+        <div id="playlist-ufficiali-container"></div>
+
+        <h2 style="color: white; border-bottom: 2px solid #555; padding-bottom: 5px; margin-top: 40px;">🛠 Le Tue Playlist</h2>
+        <button onclick="apriMenuCreazionePlaylist()" style="padding: 10px 20px; background: #1DB954; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 15px;">➕ Crea Nuova Playlist</button>
+        <div id="playlist-personalizzate-container">
+            <p style="color: #aaa; font-style: italic;">Non hai ancora creato nessuna playlist personalizzata.</p>
+        </div>
+
+    </div>
         <div id="main-app" style="display:none;">
             <div class="top-bar">
                 <button class="btn-tiny" onclick="resetPin()">⚙️ PIN</button>
@@ -520,6 +535,7 @@ function videoFinito(epName, videoElement) {
             document.getElementById('bivio-section').style.display='none';
             document.getElementById('main-app').style.display='none';
             document.getElementById('music-app').style.display='block';
+            renderizzaMusica();
         }
         function mostraCiao() {
             const msg = document.getElementById('secret-message');
@@ -539,6 +555,69 @@ function videoFinito(epName, videoElement) {
             let nuovo = prompt("Nuovo PIN:");
             if (nuovo === "0000") { alert("Riservato! Pin di sistema!"); return; }
             if(nuovo) { localStorage.setItem('user_pin', nuovo); alert("PIN aggiornato!"); }
+        }
+        
+// Funzione per disegnare le playlist preimpostate sullo schermo
+        function renderizzaMusica() {
+            const container = document.getElementById('playlist-ufficiali-container');
+            container.innerHTML = ''; // Pulisce il contenitore
+
+            // Raggruppiamo i brani per Playlist (leggendo "01", "02" ecc.)
+            let playlistRaggruppate = {};
+            DATABASE_AUDIO.forEach(brano => {
+                let parti = brano.name.split('x'); // Divide "01x01..."
+                let numPlaylist = parti[0]; // Prende il "01"
+                
+                if (!playlistRaggruppate[numPlaylist]) {
+                    playlistRaggruppate[numPlaylist] = [];
+                }
+                playlistRaggruppate[numPlaylist].push(brano);
+            });
+
+            // Disegniamo ogni playlist
+            for (let pl in playlistRaggruppate) {
+                let divPl = document.createElement('div');
+                divPl.style.marginBottom = '25px';
+                
+                let titolo = document.createElement('h3');
+                titolo.style.color = '#1DB954';
+                titolo.innerText = `Playlist ${parseInt(pl)}`; // Scrive "Playlist 1"
+                divPl.appendChild(titolo);
+
+                let lista = document.createElement('div');
+                lista.className = 'episodes-list'; // Usiamo la stessa estetica dei video!
+                
+                playlistRaggruppate[pl].forEach(brano => {
+                    let btn = document.createElement('div');
+                    btn.className = 'episode-item';
+                    
+                    // Puliamo il nome togliendo la sigla "01x01"
+                    let nomePulito = brano.name.split(' ').slice(1).join(' ');
+                    
+                    btn.innerHTML = `<span style="flex-grow: 1;">🎵 ${nomePulito}</span>`;
+                    btn.onclick = () => riproduciBrano(brano.url, nomePulito);
+                    
+                    lista.appendChild(btn);
+                });
+
+                divPl.appendChild(lista);
+                container.appendChild(divPl);
+            }
+        }
+
+        // Funzione che fa partire la musica quando clicchi un brano
+        function riproduciBrano(url, titolo) {
+            const player = document.getElementById('player-audio');
+            const titoloDisplay = document.getElementById('titolo-brano-corrente');
+            
+            player.src = url;
+            titoloDisplay.innerText = titolo;
+            player.play().catch(e => console.log("Autoplay bloccato"));
+        }
+
+        // Funzione segnaposto per il tasto + (la faremo al prossimo giro)
+        function apriMenuCreazionePlaylist() {
+            alert("Presto potrai creare le tue playlist qui! 🛠️");
         }
     </script>
 </body>
