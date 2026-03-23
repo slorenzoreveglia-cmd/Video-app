@@ -61,6 +61,11 @@
         body.theme-4.logged-in { background: #083344; } body.theme-4 .season-tab, body.theme-4 .intro-box { background: linear-gradient(135deg, #0e7490, #0891b2); }
         body.theme-5.logged-in { background: #042f2e; } body.theme-5 .season-tab, body.theme-5 .intro-box { background: linear-gradient(135deg, #0f766e, #14b8a6); }
         body.logged-in .check-box.checked::after { color: inherit; filter: brightness(0.5); }
+        /* Rende la lista episodi nera trasparente SOLO per il Tema 7 */
+        body.theme-7 .episodes-list {
+            background-color: rgba(0, 0, 0, 0.6) !important; 
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -75,7 +80,6 @@
             <button class="primary-btn" onclick="mostraCiao()">Premi Qui</button>
             <br><br><button class="btn-tiny" onclick="location.reload()">⬅ Torna</button>
         </div>
-        //aggiunta
 <div id="bivio-section" style="display:none; text-align:center; padding-top: 20vh;">
         <h1 style="color: white; margin-bottom: 40px;">Di quale servizio vuoi usufruire?</h1>
         <div style="display: flex; justify-content: center; gap: 20px;">
@@ -86,12 +90,12 @@
 
     <div id="music-app" style="display:none; padding: 20px;">
         <h1 style="color: white; text-align: center;">🎵 Sezione Musica in Costruzione...</h1>
-        <button onclick="tornaAlBivio()" style="padding: 10px; margin-bottom: 20px; background: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">⬅ Torna al Menu</button>
+        <button onclick="apriStreaming()" style="padding: 10px 20px; margin-bottom: 20px; background: #e50914; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🎬 Passa a Streaming</button>
         </div>
-        //fine aggiunta
         <div id="main-app" style="display:none;">
             <div class="top-bar">
                 <button class="btn-tiny" onclick="resetPin()">⚙️ PIN</button>
+                <button onclick="apriMusica()" style="padding: 10px 20px; margin-bottom: 20px; background: #1DB954; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🎵 Passa a Spotify</button>
                 <button class="btn-tiny" id="theme-btn" style="background:white;color:black">🎨 COLORE</button>
             </div>
             
@@ -225,36 +229,35 @@
             { name: "03x24 Ritorno sulla Luna - Back to the Moon", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773315277/Steven.Universe.03x24.Ritorno.Sulla.Luna.Back.To.The.Moon.23_w6nv24.mp4" },
             { name: "03x25 Nella bolla - Bubbled", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773510757/Steven.Universe.03x25.Nella.Bolla.Bubbled.2345546.mkv.mp4_at_is4bnl.mp4" },
 
-            // STAGIONE 4
+            // STAGIONE 4 -finita
             { name: "04x01 Il ragazzo del giardino d'infanzia - The Kindergarten Kid", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091199/Steven.Universe.04x01.Il.Ragazzo.Del.Giardino.D.Infanzia.The_gb5xuv.mp4" },
             { name: "04x02 Conosci la tua fusione - Know Your Fusion", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091215/Steven.Universe.04x02.Conosci.la.tua.Fusione.Know.Your.Fusio_hbt0zv.mp4" },
             { name: "04x03 Il diario di Buddy - Buddy's Book", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091115/Steven.Universe.04x03.Il.Diario.Di.Buddy.Buddys.Book.2345549_w6jahs.mp4" },
-            { name: "04x04 Meditazione guidata - Mindful Education", url: "" },
+            { name: "04x04 Una Fusione armonica - Mindful Education", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773956205/Steven.Universe.04x04.Una.Fusione.Armonica.Mindful.Education_gg005c.mp4" },
             { name: "04x05 Prevedere il Futuro - Future Boy Zoltron", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091199/Steven.Universe.04x05.Prevedere.Il.Futuro.Future.Boy.Zoltron_ujlo7a.mp4" },
-            { name: "04x06 L'ultima cena - Last One Out of Beach City", url: "" },
-            { name: "04x07 La gang della cipolla - Onion Gang", url: "" },
-            { name: "04x08 Gem Harvest (Parte 1) - Gem Harvest (Part 1)", url: "" },
-            { name: "04x09 Gem Harvest (Parte 2) - Gem Harvest (Part 2)", url: "" },
+            { name: "04x06 Il concerto Rock - Last One Out of Beach City", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773956179/Steven.Universe.04x06.Il.Concerto.Rock.Last.One.Out.Of.Beach_jxpqqw.mp4" },
+            { name: "04x07 La banda di Cipollo - Onion Gang", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773956190/Steven.Universe.04x07.La.Banda.di.Cipollo.Onion.Gang.2345553_hadmrj.mp4" },
+            { name: "04x08 Una famiglia allargata - Gem Harvest", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773956166/Steven.Universe.04x08.Una.Famiglia.Allargata.Gem.Harvest.234_krkrdz.mp4" },
+            { name: "04x09 Tre gemme e un bebè - Three Gems and a Baby", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773956191/Steven.Universe.04x09.Il.Rapimento.di.Steven.Three.Gems.And._wzlmdv.mp4" },
             { name: "04x10 Il sogno di Steven - Steven's Dream", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091130/Steven.Universe.04x10.Il.Sogno.di.Steven.Steven.s.Dream.2345_jcbvso.mp4" },
-            { name: "04x11 Tre gemme e un bebè - Three Gems and a Baby", url: "" },
-            { name: "04x12 Avventura nello spazio - Adventures in Light Distortion", url: "" },
-            { name: "04x13 Furto di Gemme - Gem Heist", url: "" },
-            { name: "04x14 Lo zoo degli umani - The Zoo", url: "" },
-            { name: "04x15 Niente di nuovo - That Will Be All", url: "" },
+            { name: "04x11 Verso lo Zoo - Adventures in Light Distortion", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773956191/Steven.Universe.04x11.Verso.Lo.Adventures.In.Light.Distortio_jplbq0.mp4" },
+            { name: "04x12 Lo Umano - Gem Heist", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773956205/Steven.Universe.04x12.Lo.Umano.Gem.Heist.2345558.mkv.mp4_at_cpu6ni.mp4" },
+            { name: "04x13 Lo Zoo - The Zoo", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773956161/Steven.Universe.04x13.Lo.The.2345559.mkv.mp4_at_Streamtape.c_siukqv.mp4" },
+            { name: "04x14 Per ora è tutto - That Will Be All", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1774271860/Steven.Universe.04x14.Per.Ora.e.Tutto.That.Will.Be.All.23455_d2hrnc.mp4" },
+            { name: "04x15 Le nuove Crystal Gems - The New Crystal Gems", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1774271845/Steven.Universe.04x15.Le.Nuove.Crystal.Gem.The.New.Crystal.G_edlsym.mp4" },
             { name: "04x16 Madre e figlio - Storm in the Room", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091160/Steven.Universe.04x16.Madre.e.Figlio.Storm.in.the.Room.23455_aqtjv7.mp4" },
             { name: "04x17 Un alleato invadente - Rocknaldo", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091179/Steven.Universe.04x17.Un.Alleato.Invadente.Rocknaldo.2345562_ilhcjz.mp4" },
-            { name: "04x18 Le nuove Crystal Gems - The New Crystal Gems", url: "" },
-            { name: "04x19 Tigre filantropa - Tiger Philanthropist", url: "" },
-            { name: "04x20 Un posto per Ruby - Room for Ruby", url: "" },
+            { name: "04x18 L'ultimo incontro - Tiger Philanthropist", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1774271809/Steven.Universe.04x18.L.Ultimo.Incontro.Tiger.Philanthropist_omim8g.mp4" },
+            { name: "04x19 Una stanza per Rubino - Room for Ruby", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1774271814/Steven.Universe.04x19.Una.Stanza.per.Rubino.Room.for.Ruby.23_slcd6k.mp4" },
+            { name: "04x20 Un'altra videocassetta - Lion 4: Alternate Ending", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1774271813/Steven.Universe.04x20.Un.Altra.Videocassetta.Lion.4.Alternat_xqidyk.mp4" },
             { name: "04x21 Inseguimento notturno - Doug Out", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091154/Steven.Universe.04x21.Inseguimento.Notturno.Doug.Out.2345566_yhuebx.mp4" },
             { name: "04x22 Il dolce di Lars - The Good Lars", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091147/Steven.Universe.04x22.Il.Dolce.di.Lars.The.Good.Lars.2345567_llfuhy.mp4" },
             { name: "04x23 Amici scomparsi - Are You My Dad?", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091199/Steven.Universe.04x23.Amici.Scomparsi.Are.You.My.Dad.2345568_vx50pk.mp4" },
             { name: "04x24 La scelta - I Am My Mom", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773091140/Steven.Universe.04x24.La.Scelta.I.Am.My.Mom.2345569.mkv.mp4_ue9ndc.mp4" },
-            { name: "04x25 Leone 4: finale alternativo - Lion 4: Alternate Ending", url: "" },
 
             // STAGIONE 5
             { name: "05x01 In trappola - Stuck Together", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773147480/Steven.Universe.05x01.In.Trappola.Stuck.Together.2345579.mkv_c3mpbo.mp4" },
-            { name: "05x02 Il processo - The Trial", url: "" },
+            { name: "05x02 In difesa di Rose - The Trial", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1774272118/Steven.Universe.05x02.In.Difesa.di.Rose.The.Trial.2345580.mk_aihniz.mp4" },
             { name: "05x03 Le gemme difettose - Off Colors", url: "" },
             { name: "05x04 Ritorno sulla Terra - Lars' Head", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773147463/Steven.Universe.05x04.Ritorno.sulla.Terra.Lars.Head.2345582._qorqzx.mp4" },
             { name: "05x05 Nuove elezioni in città - Dewey Wins", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773147473/Steven.Universe.05x05.Nuove.Elezioni.in.Citta.Dewey.Wins.234_shcmwi.mp4" },
@@ -308,6 +311,17 @@
             { name: "Filmx01 Steven Universe: Il Film (pt.1) - Steven Universe: The Movie (pt.1)", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773769926/Steven_Universe_Future__s1___e1___1_t5bpdp.mp4" },
             { name: "Filmx02 Steven Universe: Il Film (pt.2) - Steven Universe: The Movie (pt.2)", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773769926/Steven_Universe_Future__s1___e1___1_t5bpdp.mp4" }
             
+        ];
+        const DATABASE_AUDIO = [
+            // PLAYLIST 1 (es. Pop/Hit)
+            { name: "01x01 Titolo Canzone - Artista", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773947050/audioclubz-audio-club-amapiano-319840_waa60j.mp3" },
+            { name: "01x02 Altra Canzone - Artista", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773947050/audioclubz-audio-club-amapiano-319840_waa60j.mp3" },
+            
+            // PLAYLIST 2 (es. Rap/Trap)
+            { name: "02x01 Titolo Canzone - Artista", url: "LINK_MP3_QUI" },
+            
+            // PLAYLIST 3 (es. Relax/Chill)
+            { name: "03x01 Titolo Canzone - Artista", url: "LINK_MP3_QUI" }
         ];
 
         let watchedEpisodes = JSON.parse(localStorage.getItem('watched_eps')) || [];
@@ -489,28 +503,24 @@ function videoFinito(epName, videoElement) {
             }
         }
 
-        // Funzioni per i bottoni del Bivio
         function apriStreaming() {
+            // Ferma eventuali canzoni o video
+            document.querySelectorAll('video, audio').forEach(media => media.pause());
+            
             document.getElementById('bivio-section').style.display='none';
+            document.getElementById('music-app').style.display='none';
             document.getElementById('main-app').style.display='block';
             renderizzaStagioni();
         }
 
         function apriMusica() {
-            document.getElementById('bivio-section').style.display='none';
-            document.getElementById('music-app').style.display='block';
-            // Qui in futuro caricheremo le playlist
-        }
-
-        function tornaAlBivio() {
-            // Ferma video o musica se stiamo tornando indietro
+            // Ferma eventuali canzoni o video
             document.querySelectorAll('video, audio').forEach(media => media.pause());
+            
+            document.getElementById('bivio-section').style.display='none';
             document.getElementById('main-app').style.display='none';
-            document.getElementById('music-app').style.display='none';
-            document.getElementById('bivio-section').style.display='block';
+            document.getElementById('music-app').style.display='block';
         }
-        //fine modifica
-
         function mostraCiao() {
             const msg = document.getElementById('secret-message');
             msg.style.opacity = "1"; setTimeout(() => msg.style.opacity = "0", 2000);
