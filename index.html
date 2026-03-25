@@ -66,6 +66,30 @@
             background-color: rgba(0, 0, 0, 0.6) !important; 
             border-radius: 10px;
         }
+        /* Stile per i bottoni controllo musica */
+        .control-btn {
+            background: none; 
+            border: none; 
+            color: white; 
+            font-size: 22px; 
+            cursor: pointer; 
+            opacity: 0.7;
+            transition: 0.2s;
+        }
+        .control-btn:hover { opacity: 1; }
+        
+        /* Classe per quando SHUFFLE o LOOP sono ATTIVI (Si illuminano di verde) */
+        .control-active { 
+            color: #1DB954 !important; 
+            opacity: 1 !important;
+            filter: drop-shadow(0 0 5px #1DB954);
+            transform: scale(1.1);
+        }
+        
+        /* Correzione colore specifico per le tendine Spotify */
+        body.logged-in #music-app .season-tab {
+            background: linear-gradient(135deg, #1db954, #13853c);
+        }
     </style>
 </head>
 <body>
@@ -87,31 +111,43 @@
             <button onclick="apriMusica()" style="padding: 20px 40px; font-size: 20px; border-radius: 10px; border: none; background: #1DB954; color: white; cursor: pointer; font-weight: bold;">🎵 Spotify</button>
         </div>
     </div>
+    <div id="music-app" style="display:none; padding: 10px; max-width: 500px; margin: auto;">
+        
+        <div class="top-bar">
+            <button class="btn-tiny" onclick="resetPin()">⚙️ PIN</button>
+            <button class="btn-tiny" id="theme-btn-music" style="background:white;color:black">🎨 COLORE</button>
+        </div>
 
-    <div id="music-app" style="display:none; padding: 20px; max-width: 800px; margin: auto;">
+        <div class="intro-box">
+            <h2>🎵 Angolo Musica</h2>
+            Ehi, c'è la musica! Scegli una playlist ufficiale o crea la tua.
+            <br><br>
+            <button onclick="apriStreaming()" style="padding: 5px 10px; background: #e50914; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">🎬 Passa a Streaming</button>
+        </div>
         
-        <button onclick="apriStreaming()" style="padding: 10px 20px; margin-bottom: 20px; background: #e50914; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🎬 Passa a Streaming</button>
-        
-        <div style="background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px; margin-bottom: 30px; text-align: center; border: 2px solid #1DB954;">
-            <h3 id="titolo-brano-corrente" style="color: #1DB954; margin-top: 0; margin-bottom: 15px;">Nessun brano in riproduzione</h3>
+        <div style="background: rgba(0,0,0,0.8); padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.2);">
+            <h3 id="titolo-brano-corrente" style="color: #1DB954; margin-top: 0; margin-bottom: 10px; font-size: 16px;">Nessun brano</h3>
             
-            <audio id="player-audio" controls style="width: 100%; outline: none; margin-bottom: 15px;"></audio>
+            <audio id="player-audio" controls style="width: 100%; outline: none; margin-bottom: 10px; height: 35px;"></audio>
             
-            <div style="display: flex; justify-content: center; gap: 20px;">
-                <button id="btn-shuffle" onclick="toggleShuffle()" style="background:none; border:none; color:white; font-size: 24px; cursor:pointer;">🔀</button>
-                <button onclick="prevTrack()" style="background:none; border:none; color:white; font-size: 24px; cursor:pointer;">⏮️</button>
-                <button onclick="nextTrack()" style="background:none; border:none; color:white; font-size: 24px; cursor:pointer;">⏭️</button>
-                <button id="btn-loop" onclick="toggleLoop()" style="background:none; border:none; color:white; font-size: 24px; cursor:pointer;">🔁</button>
+            <div style="display: flex; justify-content: center; gap: 25px; margin-top: 5px;">
+                <button id="btn-shuffle" onclick="toggleShuffle()" class="control-btn">🔀</button>
+                <button onclick="prevTrack()" class="control-btn">⏮️</button>
+                <button onclick="nextTrack()" class="control-btn">⏭️</button>
+                <button id="btn-loop" onclick="toggleLoop()" class="control-btn">🔁</button>
             </div>
         </div>
 
-        <h2 style="color: white; border-bottom: 2px solid #555; padding-bottom: 5px;">🎧 Playlist Ufficiali</h2>
         <div id="playlist-ufficiali-container"></div>
 
-        <h2 style="color: white; border-bottom: 2px solid #555; padding-bottom: 5px; margin-top: 40px;">🛠 Le Tue Playlist</h2>
-        <button onclick="apriMenuCreazionePlaylist()" style="padding: 10px 20px; background: #1DB954; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 15px;">➕ Crea Nuova Playlist</button>
-        <div id="playlist-personalizzate-container">
-            <p style="color: #aaa; font-style: italic;">Non hai ancora creato nessuna playlist personalizzata.</p>
+        <div style="margin-top: 30px; padding: 15px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="color: white; margin:0;">🛠 Le Tue Playlist</h3>
+                <button onclick="apriMenuCreazionePlaylist()" style="padding: 5px 10px; background: #1DB954; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px;">➕ Nuova</button>
+            </div>
+            <div id="playlist-personalizzate-container">
+                <p style="color: #aaa; font-style: italic; font-size: 13px; text-align: center;">Nessuna playlist creata.</p>
+            </div>
         </div>
 
     </div>
@@ -566,20 +602,19 @@ function videoFinito(epName, videoElement) {
         }
         
 // Funzione per disegnare le playlist preimpostate sullo schermo
-        // 1. QUI SCEGLI I NOMI DELLE TUE PLAYLIST!
+// Dizionario nomi Playlist (come prima)
         const NOMI_PLAYLIST = {
-            "01": "Banana",
-            "02": "Palestra",
-            "03": "Relax"
+            "01": "Banana Hit",
+            "02": "Palestra Hard",
+            "03": "Relax & Chill"
         };
 
-        // Variabili di sistema per far funzionare i comandi
         let codaCorrente = [];
         let indiceCorrente = 0;
         let isShuffle = false;
         let isLoop = false;
 
-        // 2. Disegna i menù a tendina (uguali ai video)
+        // 2. Disegna i menù a tendina IDENTICI ALLO STREAMING
         function renderizzaMusica() {
             const container = document.getElementById('playlist-ufficiali-container');
             container.innerHTML = '';
@@ -594,21 +629,18 @@ function videoFinito(epName, videoElement) {
 
             for (let pl in playlistRaggruppate) {
                 let divPl = document.createElement('div');
-                divPl.style.marginBottom = '15px';
+                divPl.style.marginBottom = '10px';
 
-                // Legge il nome da NOMI_PLAYLIST, se non c'è usa "Playlist N"
                 let nomeVisualizzato = NOMI_PLAYLIST[pl] || `Playlist ${parseInt(pl)}`;
 
-                // HEADER DEL MENÙ A TENDINA (Usa la stessa classe dei video)
+                // HEADER DEL MENÙ A TENDINA (Usa le classi CSS originali .season-tab)
                 let header = document.createElement('div');
-                header.className = 'season-header'; 
-                header.style.background = '#1DB954'; // Colore verde Spotify
-                header.innerHTML = `<h3 style="margin:0; color:white;">🎧 ${nomeVisualizzato}</h3><span style="color:white;">▼</span>`;
+                header.className = 'season-tab'; // Esattamente come i video!
+                header.innerHTML = `<span>🎧 ${nomeVisualizzato}</span> <span>▼</span>`;
                 
-                // Funzione di apertura/chiusura tendina
                 header.onclick = function() {
                     let lista = this.nextElementSibling;
-                    let icona = this.querySelector('span');
+                    let icona = this.querySelectorAll('span')[1];
                     if (lista.style.display === 'none') {
                         lista.style.display = 'block';
                         icona.innerText = '▲';
@@ -619,19 +651,34 @@ function videoFinito(epName, videoElement) {
                 };
                 divPl.appendChild(header);
 
-                // LISTA DEI BRANI (Nascosta di default)
+                // LISTA DEI BRANI (Usa .episodes-list)
                 let lista = document.createElement('div');
-                lista.className = 'episodes-list';
+                lista.className = 'episodes-list'; // Esattamente come i video!
                 lista.style.display = 'none'; 
                 
                 playlistRaggruppate[pl].forEach((brano, index) => {
                     let btn = document.createElement('div');
-                    btn.className = 'episode-item';
-                    let nomePulito = brano.name.split(' ').slice(1).join(' ');
+                    btn.className = 'episode-item'; // Esattamente come i video!
+                    btn.style.alignItems = 'center';
                     
-                    btn.innerHTML = `<span style="flex-grow: 1;">🎵 ${nomePulito}</span>`;
+                    // Parse del nome: "01x01 Titolo Canzone - Autore"
+                    let partiNome = brano.name.split(' - ');
+                    // "Titolo Canzone"
+                    let nomePulitoTotal = partiNome[0].split(' ').slice(1).join(' '); 
+                    // "Autore" (va a capo grazie alla struttura)
+                    let artista = partiNome[1] || ""; 
                     
-                    // Se clicchi un brano, carica tutta la playlist e parte da quel brano
+                    // COSTRUIAMO LA STRUTTURA IDENTICA AI VIDEO
+                    btn.innerHTML = `
+                        <div class="check-area" style="color:#1DB954">🎵</div>
+                        <div class="episode-content" style="cursor: pointer;">
+                            <div class="title-row">
+                                <span class="title-it">${nomePulitoTotal}</span>
+                            </div>
+                            <span class="title-en" style="opacity:0.7; color:#ddd;">👤 ${artista}</span>
+                        </div>
+                    `;
+                    
                     btn.onclick = () => avviaPlaylist(playlistRaggruppate[pl], index);
                     lista.appendChild(btn);
                 });
@@ -641,7 +688,7 @@ function videoFinito(epName, videoElement) {
             }
         }
 
-        // 3. Gestione della Riproduzione
+        // 3. Gestione della Riproduzione (Uguale a prima)
         function avviaPlaylist(playlistArray, indexPartenza) {
             codaCorrente = playlistArray;
             indiceCorrente = indexPartenza;
@@ -650,25 +697,24 @@ function videoFinito(epName, videoElement) {
 
         function caricaBrano(index) {
             if (!codaCorrente || codaCorrente.length === 0) return;
-            
             let brano = codaCorrente[index];
-            let nomePulito = brano.name.split(' ').slice(1).join(' ');
+            
+            // Estrae solo il titolo per il display in alto
+            let nomePulitoTotal = brano.name.split(' - ')[0].split(' ').slice(1).join(' ');
             
             const player = document.getElementById('player-audio');
-            document.getElementById('titolo-brano-corrente').innerText = nomePulito;
+            document.getElementById('titolo-brano-corrente').innerText = nomePulitoTotal;
             
             player.src = brano.url;
             player.play().catch(e => console.log("Autoplay bloccato"));
         }
 
-        // 4. I Comandi: Avanti, Indietro, Shuffle, Loop
+        // 4. I Comandi con FEEDBACK VISIVO
         function nextTrack() {
             if (!codaCorrente.length) return;
             if (isShuffle) {
-                // Sceglie un brano a caso nella playlist
                 indiceCorrente = Math.floor(Math.random() * codaCorrente.length);
             } else {
-                // Va al prossimo in ordine, se finisce ricomincia la playlist
                 indiceCorrente++;
                 if (indiceCorrente >= codaCorrente.length) indiceCorrente = 0; 
             }
@@ -684,27 +730,32 @@ function videoFinito(epName, videoElement) {
 
         function toggleShuffle() {
             isShuffle = !isShuffle;
-            // Illumina il bottone di verde se è attivo
-            document.getElementById('btn-shuffle').style.color = isShuffle ? '#1DB954' : 'white';
+            // Aggiunge o toglie la classe CSS che fa illuminare il tasto
+            document.getElementById('btn-shuffle').classList.toggle('control-active', isShuffle);
         }
 
         function toggleLoop() {
             isLoop = !isLoop;
             const player = document.getElementById('player-audio');
-            player.loop = isLoop; // Regola nativa del browser per ripetere l'audio all'infinito
-            document.getElementById('btn-loop').style.color = isLoop ? '#1DB954' : 'white';
+            player.loop = isLoop;
+            // Aggiunge o toglie la classe CSS che fa illuminare il tasto
+            document.getElementById('btn-loop').classList.toggle('control-active', isLoop);
         }
 
-        // 5. AVANZAMENTO AUTOMATICO A FINE BRANO
-        // Appena la pagina si carica, dice al player: "Quando finisci, passa al prossimo"
+        // 5. Autoplay e Attivazione Tasto Colore Musica
         window.addEventListener('DOMContentLoaded', (event) => {
             const player = document.getElementById('player-audio');
             if(player) {
                 player.addEventListener('ended', function() {
-                    if (!this.loop) { // Se NON è in loop, passa al prossimo
-                        nextTrack();
-                    }
+                    if (!this.loop) { nextTrack(); }
                 });
+            }
+            
+            // Collega il tasto colore nella sezione musica al sistema temi esistente
+            const themeBtnMusic = document.getElementById('theme-btn-music');
+            const themeBtnMain = document.getElementById('theme-btn'); // Il tasto originale
+            if(themeBtnMusic && themeBtnMain) {
+                themeBtnMusic.onclick = () => themeBtnMain.click(); // Simula il click sul tasto vero
             }
         });
 
