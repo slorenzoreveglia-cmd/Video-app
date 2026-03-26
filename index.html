@@ -86,10 +86,6 @@
             transform: scale(1.1);
         }
         
-        /* Correzione colore specifico per le tendine Spotify */
-        body.logged-in #music-app .season-tab {
-            background: linear-gradient(135deg, #1db954, #13853c);
-        }
     </style>
 </head>
 <body>
@@ -127,6 +123,9 @@
         
         <div style="background: rgba(0,0,0,0.8); padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.2);">
             <h3 id="titolo-brano-corrente" style="color: #1DB954; margin-top: 0; margin-bottom: 10px; font-size: 16px;">Nessun brano</h3>
+            
+            <div class="intro-box" style="padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center;">
+            <h3 id="titolo-brano-corrente" style="margin-top: 0; margin-bottom: 10px; font-size: 16px;">Nessun brano</h3>
             
             <audio id="player-audio" controls style="width: 100%; outline: none; margin-bottom: 10px; height: 35px;"></audio>
             
@@ -604,9 +603,9 @@ function videoFinito(epName, videoElement) {
 // Funzione per disegnare le playlist preimpostate sullo schermo
 // Dizionario nomi Playlist (come prima)
         const NOMI_PLAYLIST = {
-            "01": "Banana Hit",
-            "02": "Palestra Hard",
-            "03": "Relax & Chill"
+            "01": "Playlist 1",
+            "02": "SU 2",
+            "03": "Rebecca Sugar"
         };
 
         let codaCorrente = [];
@@ -634,13 +633,32 @@ function videoFinito(epName, videoElement) {
                 let nomeVisualizzato = NOMI_PLAYLIST[pl] || `Playlist ${parseInt(pl)}`;
 
                 // HEADER DEL MENÙ A TENDINA (Usa le classi CSS originali .season-tab)
+                // HEADER DEL MENÙ A TENDINA (Perfettamente identico allo streaming)
                 let header = document.createElement('div');
-                header.className = 'season-tab'; // Esattamente come i video!
-                header.innerHTML = `<span>🎧 ${nomeVisualizzato}</span> <span>▼</span>`;
+                header.className = 'season-tab'; // Usa il colore del tuo tema!
                 
+                // Allineamento perfetto: Sinistra (Titolo) - Centro (Play) - Destra (Triangolo)
+                header.style.display = 'flex';
+                header.style.justifyContent = 'space-between';
+                header.style.alignItems = 'center';
+                
+                header.innerHTML = `
+                    <span style="font-weight: bold;">🎧 ${nomeVisualizzato}</span>
+                    <button class="play-intera-playlist" style="background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 15px; padding: 5px 15px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.2s;">▶️ Play</button>
+                    <span class="freccia-tendina" style="font-weight: bold;">▼</span>
+                `;
+                
+                // Funzione per il tasto "Play" (fa partire tutta la playlist da 0)
+                let btnPlay = header.querySelector('.play-intera-playlist');
+                btnPlay.onclick = function(event) {
+                    event.stopPropagation(); // Evita che premendo Play si apra/chiuda anche la tendina
+                    avviaPlaylist(playlistRaggruppate[pl], 0);
+                };
+                
+                // Funzione di apertura/chiusura tendina cliccando sul resto della barra
                 header.onclick = function() {
                     let lista = this.nextElementSibling;
-                    let icona = this.querySelectorAll('span')[1];
+                    let icona = this.querySelector('.freccia-tendina');
                     if (lista.style.display === 'none') {
                         lista.style.display = 'block';
                         icona.innerText = '▲';
