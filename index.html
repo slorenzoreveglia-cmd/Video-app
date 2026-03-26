@@ -139,10 +139,10 @@
 
         <div id="playlist-ufficiali-container"></div>
 
-        <div style="margin-top: 30px; padding: 15px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div style="margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 5px; margin-bottom: 15px;">
                 <h3 style="color: white; margin:0;">🛠 Le Tue Playlist</h3>
-                <button onclick="apriMenuCreazionePlaylist()" style="padding: 5px 10px; background: #1DB954; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px;">➕ Nuova</button>
+                <button onclick="apriMenuCreazionePlaylist()" style="padding: 5px 15px; background: #1DB954; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px;">➕ Nuova</button>
             </div>
             <div id="playlist-personalizzate-container">
                 <p style="color: #aaa; font-style: italic; font-size: 13px; text-align: center;">Nessuna playlist creata.</p>
@@ -616,8 +616,9 @@ function videoFinito(epName, videoElement) {
         // 2. Disegna i menù a tendina IDENTICI ALLO STREAMING
         function renderizzaMusica() {
             const container = document.getElementById('playlist-ufficiali-container');
-            container.innerHTML = '';
+            container.innerHTML = ''; // Pulisce lo schermo prima di disegnare
 
+            // Raggruppa i brani leggendo 01, 02, ecc.
             let playlistRaggruppate = {};
             DATABASE_AUDIO.forEach(brano => {
                 let parti = brano.name.split('x');
@@ -626,74 +627,74 @@ function videoFinito(epName, videoElement) {
                 playlistRaggruppate[numPlaylist].push(brano);
             });
 
+            // Disegna le tendine
             for (let pl in playlistRaggruppate) {
                 let divPl = document.createElement('div');
-                divPl.style.marginBottom = '10px';
+                divPl.style.marginBottom = '5px';
 
                 let nomeVisualizzato = NOMI_PLAYLIST[pl] || `Playlist ${parseInt(pl)}`;
 
-                // HEADER DEL MENÙ A TENDINA (Usa le classi CSS originali .season-tab)
-                // HEADER DEL MENÙ A TENDINA (Perfettamente identico allo streaming)
+                // 1. LA TENDINA: Titolo a sx, Play al centro, Freccia a dx. Più esile!
                 let header = document.createElement('div');
-                header.className = 'season-tab'; // Usa il colore del tuo tema!
-                
-                // Allineamento perfetto: Sinistra (Titolo) - Centro (Play) - Destra (Triangolo)
+                header.className = 'season-tab'; 
                 header.style.display = 'flex';
-                header.style.justifyContent = 'space-between';
                 header.style.alignItems = 'center';
+                header.style.padding = '8px 15px'; // Questo la rende "stretta" come le stagioni
                 
                 header.innerHTML = `
-                    <span style="font-weight: bold;">🎧 ${nomeVisualizzato}</span>
-                    <button class="play-intera-playlist" style="background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 15px; padding: 5px 15px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.2s;">▶️ Play</button>
+                    <span style="font-weight: bold; flex-grow: 1; text-align: left;">🎧 ${nomeVisualizzato}</span>
+                    <button class="play-intera-playlist" style="background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 15px; padding: 4px 12px; cursor: pointer; font-weight: bold; font-size: 11px; margin-right: 15px; transition: 0.2s;">▶️ Play</button>
                     <span class="freccia-tendina" style="font-weight: bold;">▼</span>
                 `;
                 
-                // Funzione per il tasto "Play" (fa partire tutta la playlist da 0)
+                // Cliccando "Play", parte tutta la playlist da zero
                 let btnPlay = header.querySelector('.play-intera-playlist');
                 btnPlay.onclick = function(event) {
-                    event.stopPropagation(); // Evita che premendo Play si apra/chiuda anche la tendina
+                    event.stopPropagation(); // Serve a non far aprire la tendina se clicchi solo Play
                     avviaPlaylist(playlistRaggruppate[pl], 0);
                 };
                 
-                // Funzione di apertura/chiusura tendina cliccando sul resto della barra
+                // 2. CHIUSURA AUTOMATICA: Cliccando la tendina, si chiudono le altre
                 header.onclick = function() {
                     let lista = this.nextElementSibling;
                     let icona = this.querySelector('.freccia-tendina');
-                    if (lista.style.display === 'none') {
+                    let staAprendo = (lista.style.display === 'none'); 
+
+                    // Nasconde tutte le liste e mette le frecce in giù ▼
+                    document.querySelectorAll('#playlist-ufficiali-container .episodes-list').forEach(l => l.style.display = 'none');
+                    document.querySelectorAll('#playlist-ufficiali-container .freccia-tendina').forEach(i => i.innerText = '▼');
+
+                    // Se la stavo aprendo, la mostro e metto la freccia in su ▲
+                    if (staAprendo) {
                         lista.style.display = 'block';
                         icona.innerText = '▲';
-                    } else {
-                        lista.style.display = 'none';
-                        icona.innerText = '▼';
                     }
                 };
                 divPl.appendChild(header);
 
-                // LISTA DEI BRANI (Usa .episodes-list)
+                // 3. LA LISTA DELLE CANZONI: Trasparente e con testo "a colonna"
                 let lista = document.createElement('div');
-                lista.className = 'episodes-list'; // Esattamente come i video!
+                lista.className = 'episodes-list'; 
+                lista.style.background = 'transparent'; // Tolto il rettangolo nero di sfondo!
                 lista.style.display = 'none'; 
                 
                 playlistRaggruppate[pl].forEach((brano, index) => {
                     let btn = document.createElement('div');
-                    btn.className = 'episode-item'; // Esattamente come i video!
+                    btn.className = 'episode-item'; 
+                    btn.style.padding = '10px';
                     btn.style.alignItems = 'center';
                     
-                    // Parse del nome: "01x01 Titolo Canzone - Autore"
+                    // Divide "01x01 Titolo Canzone" da "Autore" (se usi il trattino - nel database)
                     let partiNome = brano.name.split(' - ');
-                    // "Titolo Canzone"
                     let nomePulitoTotal = partiNome[0].split(' ').slice(1).join(' '); 
-                    // "Autore" (va a capo grazie alla struttura)
-                    let artista = partiNome[1] || ""; 
+                    let artista = partiNome[1] || "Artista Sconosciuto"; 
                     
-                    // COSTRUIAMO LA STRUTTURA IDENTICA AI VIDEO
+                    // Disegna Titolo sopra, Artista sotto in grigetto
                     btn.innerHTML = `
-                        <div class="check-area" style="color:#1DB954">🎵</div>
-                        <div class="episode-content" style="cursor: pointer;">
-                            <div class="title-row">
-                                <span class="title-it">${nomePulitoTotal}</span>
-                            </div>
-                            <span class="title-en" style="opacity:0.7; color:#ddd;">👤 ${artista}</span>
+                        <div class="check-area" style="color:#1DB954; margin-right: 15px; font-size: 16px;">🎵</div>
+                        <div class="episode-content" style="cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+                            <span style="font-weight: bold; font-size: 14px; margin-bottom: 3px;">${nomePulitoTotal}</span>
+                            <span style="opacity:0.7; color:#ddd; font-size: 11px;">👤 ${artista}</span>
                         </div>
                     `;
                     
