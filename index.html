@@ -173,6 +173,25 @@
         </div>
 
     </div>
+        
+        <div id="modal-crea-playlist" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; padding:20px; overflow-y:auto; box-sizing:border-box; backdrop-filter: blur(5px);">
+        <div class="intro-box" style="max-width:500px; margin: 40px auto; padding: 25px; border-radius: 15px; border: 2px solid #1DB954; text-align: center;">
+            <h3 style="color: #1DB954; margin-top: 0;">🛠 Crea la tua Playlist</h3>
+            
+            <input type="text" id="nome-nuova-playlist" placeholder="Es. Canzoni per viaggiare..." style="width:100%; padding:12px; margin-bottom:20px; border-radius:8px; border:none; background:rgba(255,255,255,0.1); color:white; box-sizing:border-box; outline:none;">
+            
+            <p style="color: white; margin-bottom: 10px; text-align: left; font-weight: bold;">Scegli i brani:</p>
+            
+            <div id="lista-brani-selezionabili" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px; text-align: left; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px;">
+            </div>
+            
+            <div style="display:flex; justify-content:space-between; gap: 15px;">
+                <button onclick="chiudiModalePlaylist()" style="flex:1; padding:10px; background:#555; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Annulla</button>
+                <button onclick="salvaNuovaPlaylist()" style="flex:1; padding:10px; background:#1DB954; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">💾 Salva</button>
+            </div>
+        </div>
+    </div>
+        
     <script>
         const DATABASE_VIDEO = [
             // ============================================
@@ -845,23 +864,6 @@ function videoFinito(epName, videoElement) {
             // DA FARE NEL PROSSIMO STEP: renderizzaPlaylistPersonali();
         }
 
-        <div id="modal-crea-playlist" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; padding:20px; overflow-y:auto; box-sizing:border-box; backdrop-filter: blur(5px);">
-        <div class="intro-box" style="max-width:500px; margin: 40px auto; padding: 25px; border-radius: 15px; border: 2px solid #1DB954; text-align: center;">
-            <h3 style="color: #1DB954; margin-top: 0;">🛠 Crea la tua Playlist</h3>
-            
-            <input type="text" id="nome-nuova-playlist" placeholder="Es. Canzoni per viaggiare..." style="width:100%; padding:12px; margin-bottom:20px; border-radius:8px; border:none; background:rgba(255,255,255,0.1); color:white; box-sizing:border-box; outline:none;">
-            
-            <p style="color: white; margin-bottom: 10px; text-align: left; font-weight: bold;">Scegli i brani:</p>
-            
-            <div id="lista-brani-selezionabili" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px; text-align: left; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px;">
-            </div>
-            
-            <div style="display:flex; justify-content:space-between; gap: 15px;">
-                <button onclick="chiudiModalePlaylist()" style="flex:1; padding:10px; background:#555; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Annulla</button>
-                <button onclick="salvaNuovaPlaylist()" style="flex:1; padding:10px; background:#1DB954; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">💾 Salva</button>
-            </div>
-        </div>
-    </div>
         
     </script>
 </body>
