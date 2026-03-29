@@ -802,10 +802,6 @@ function videoFinito(epName, videoElement) {
             }
         });
 
-        // Inizializza la memoria del browser per salvare le tue playlist
-        // Se ci sono già playlist salvate le carica, altrimenti crea un array vuoto []
-        let playlistPersonali = JSON.parse(localStorage.getItem('miePlaylistSpotify')) || [];
-
         // Questa funzione apre il pop-up e riempie la lista di canzoni
         // Inizializza la memoria e la variabile per la modifica
         let playlistPersonali = JSON.parse(localStorage.getItem('miePlaylistSpotify')) || [];
