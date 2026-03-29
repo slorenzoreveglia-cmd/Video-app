@@ -85,6 +85,11 @@
             filter: drop-shadow(0 0 5px #1DB954);
             transform: scale(1.1);
         }
+        /* Fa diventare bianco il testo di suggerimento nella barra di creazione playlist */
+        #nome-nuova-playlist::placeholder {
+            color: white !important;
+            opacity: 0.9;
+        }
         
     </style>
 </head>
@@ -802,42 +807,87 @@ function videoFinito(epName, videoElement) {
         let playlistPersonali = JSON.parse(localStorage.getItem('miePlaylistSpotify')) || [];
 
         // Questa funzione apre il pop-up e riempie la lista di canzoni
-        function apriMenuCreazionePlaylist() {
+        // Inizializza la memoria e la variabile per la modifica
+        let playlistPersonali = JSON.parse(localStorage.getItem('miePlaylistSpotify')) || [];
+        let idPlaylistInModifica = null; // Serve per capire se stiamo creando o modificando
+
+        // 1. APRE IL MENU (Ora con le canzoni divise per Playlist!)
+        function apriMenuCreazionePlaylist(idModifica = null) {
             document.getElementById('modal-crea-playlist').style.display = 'block';
-            document.getElementById('nome-nuova-playlist').value = ''; // Svuota il nome
-            
             const contenitoreBrani = document.getElementById('lista-brani-selezionabili');
             contenitoreBrani.innerHTML = '';
             
-            // Scorre TUTTO il database audio e crea una casellina per ogni canzone
+            let playlistDaModificare = null;
+            
+            // Se stiamo modificando una playlist esistente:
+            if (idModifica) {
+                idPlaylistInModifica = idModifica;
+                playlistDaModificare = playlistPersonali.find(p => p.id === idModifica);
+                document.getElementById('nome-nuova-playlist').value = playlistDaModificare.nome;
+                document.querySelector('#modal-crea-playlist h3').innerText = '✏️ Modifica Playlist';
+            } else {
+                // Se ne stiamo creando una nuova:
+                idPlaylistInModifica = null;
+                document.getElementById('nome-nuova-playlist').value = '';
+                document.querySelector('#modal-crea-playlist h3').innerText = '🛠 Crea la tua Playlist';
+            }
+
+            // Raggruppa i brani proprio come fa il menù principale
+            let playlistRaggruppate = {};
             DATABASE_AUDIO.forEach((brano, index) => {
-                let nomePulito = brano.name.split(' - ')[0].split(' ').slice(1).join(' '); // Estrae solo il titolo
-                let artista = brano.name.split(' - ')[1] || "Ignoto";
-                
-                let div = document.createElement('div');
-                div.style.marginBottom = '10px';
-                div.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
-                div.style.paddingBottom = '5px';
-                
-                div.innerHTML = `
-                    <label style="color:white; cursor:pointer; display:flex; align-items:center; gap:10px;">
-                        <input type="checkbox" class="check-brano" value="${index}" style="width:18px; height:18px; accent-color:#1DB954;">
-                        <span style="display:flex; flex-direction:column;">
-                            <span style="font-weight:bold; font-size:14px;">${nomePulito}</span>
-                            <span style="font-size:11px; opacity:0.7;">${artista}</span>
-                        </span>
-                    </label>
-                `;
-                contenitoreBrani.appendChild(div);
+                let parti = brano.name.split('x');
+                let numPlaylist = parti[0];
+                if (!playlistRaggruppate[numPlaylist]) playlistRaggruppate[numPlaylist] = [];
+                // Salviamo anche l'indice globale per poterlo ritrovare
+                playlistRaggruppate[numPlaylist].push({ song: brano, globalIndex: index });
             });
+
+            // Disegna i gruppi nel modale
+            for (let pl in playlistRaggruppate) {
+                let nomeVisualizzato = NOMI_PLAYLIST[pl] || `Playlist ${parseInt(pl)}`;
+                
+                // Titolo del gruppo (es. "🎧 Banana Hit")
+                let titoloSezione = document.createElement('div');
+                titoloSezione.style.color = '#1DB954';
+                titoloSezione.style.fontWeight = 'bold';
+                titoloSezione.style.marginTop = '15px';
+                titoloSezione.style.marginBottom = '5px';
+                titoloSezione.style.borderBottom = '1px solid rgba(255,255,255,0.2)';
+                titoloSezione.innerText = `🎧 ${nomeVisualizzato}`;
+                contenitoreBrani.appendChild(titoloSezione);
+
+                // Brani di quel gruppo
+                playlistRaggruppate[pl].forEach(item => {
+                    let brano = item.song;
+                    let originalIndex = item.globalIndex;
+                    
+                    let nomePulito = brano.name.split(' - ')[0].split(' ').slice(1).join(' ');
+                    let artista = brano.name.split(' - ')[1] || "Ignoto";
+                    
+                    // Se stiamo modificando, controlla se questa canzone era già spuntata
+                    let isChecked = playlistDaModificare && playlistDaModificare.brani.includes(originalIndex) ? 'checked' : '';
+
+                    let div = document.createElement('div');
+                    div.style.marginBottom = '8px';
+                    div.innerHTML = `
+                        <label style="color:white; cursor:pointer; display:flex; align-items:center; gap:10px;">
+                            <input type="checkbox" class="check-brano" value="${originalIndex}" ${isChecked} style="width:18px; height:18px; accent-color:#1DB954;">
+                            <span style="display:flex; flex-direction:column;">
+                                <span style="font-weight:bold; font-size:14px;">${nomePulito}</span>
+                                <span style="font-size:11px; opacity:0.7;">${artista}</span>
+                            </span>
+                        </label>
+                    `;
+                    contenitoreBrani.appendChild(div);
+                });
+            }
         }
 
-        // Chiude il pop-up se ci ripensi
         function chiudiModalePlaylist() {
             document.getElementById('modal-crea-playlist').style.display = 'none';
         }
 
-        // Salva la playlist e la mette in memoria
+        // 2. SALVA O MODIFICA LA PLAYLIST
         function salvaNuovaPlaylist() {
             let nome = document.getElementById('nome-nuova-playlist').value.trim();
             if(!nome) { alert("⚠️ Dai un nome alla tua playlist!"); return; }
@@ -845,25 +895,142 @@ function videoFinito(epName, videoElement) {
             let checkboxes = document.querySelectorAll('.check-brano:checked');
             if(checkboxes.length === 0) { alert("⚠️ Devi selezionare almeno una canzone!"); return; }
             
-            // Prende i "numeri" (indici) delle canzoni spuntate
             let indiciBrani = Array.from(checkboxes).map(cb => parseInt(cb.value));
             
-            // Crea l'oggetto playlist con un ID univoco
-            let nuovaPlaylist = {
-                id: Date.now(), // Usa l'orario attuale come ID per non confonderle
-                nome: nome,
-                brani: indiciBrani
-            };
+            if (idPlaylistInModifica) {
+                // Stiamo sovrascrivendo una playlist esistente (Modifica)
+                let indexDaAggiornare = playlistPersonali.findIndex(p => p.id === idPlaylistInModifica);
+                if(indexDaAggiornare !== -1) {
+                    playlistPersonali[indexDaAggiornare].nome = nome;
+                    playlistPersonali[indexDaAggiornare].brani = indiciBrani;
+                }
+            } else {
+                // Stiamo creando una playlist nuova
+                let nuovaPlaylist = {
+                    id: Date.now(),
+                    nome: nome,
+                    brani: indiciBrani
+                };
+                playlistPersonali.push(nuovaPlaylist);
+            }
             
-            playlistPersonali.push(nuovaPlaylist);
-            localStorage.setItem('miePlaylistSpotify', JSON.stringify(playlistPersonali)); // Salva nel browser!
-            
+            localStorage.setItem('miePlaylistSpotify', JSON.stringify(playlistPersonali));
             chiudiModalePlaylist();
-            alert("Playlist salvata con successo! 🎉");
-            
-            // DA FARE NEL PROSSIMO STEP: renderizzaPlaylistPersonali();
+            renderizzaPlaylistPersonali(); // Ricarica la grafica
         }
 
+        // 3. STAMPA A SCHERMO LE TUE PLAYLIST
+        function renderizzaPlaylistPersonali() {
+            const container = document.getElementById('playlist-personalizzate-container');
+            container.innerHTML = '';
+
+            if (playlistPersonali.length === 0) {
+                container.innerHTML = `<p style="color: #aaa; font-style: italic; font-size: 13px; text-align: center;">Nessuna playlist creata.</p>`;
+                return;
+            }
+
+            playlistPersonali.forEach((plData) => {
+                let divPl = document.createElement('div');
+                divPl.style.marginBottom = '5px';
+
+                // Recupera le canzoni reali dal database usando i numeri salvati
+                let braniReali = plData.brani.map(idx => DATABASE_AUDIO[idx]).filter(b => b !== undefined);
+
+                // HEADER TENDINA: Con Tasti Modifica ed Elimina!
+                let header = document.createElement('div');
+                header.className = 'season-tab'; 
+                header.style.display = 'flex';
+                header.style.alignItems = 'center';
+                header.style.padding = '8px 15px';
+                
+                header.innerHTML = `
+                    <span style="font-weight: bold; flex-grow: 1; text-align: left;">🛠 ${plData.nome}</span>
+                    <button onclick="modificaPlaylist(${plData.id}, event)" style="background: transparent; color: #aaa; border: none; font-size: 14px; cursor: pointer; margin-right: 10px;" title="Modifica">✏️</button>
+                    <button onclick="eliminaPlaylist(${plData.id}, event)" style="background: transparent; color: #e50914; border: none; font-size: 14px; cursor: pointer; margin-right: 15px;" title="Elimina">🗑️</button>
+                    <button class="play-intera-playlist" style="background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 15px; padding: 4px 12px; cursor: pointer; font-weight: bold; font-size: 11px; margin-right: 15px; transition: 0.2s;">▶️ Play</button>
+                    <span class="freccia-tendina" style="font-weight: bold;">▼</span>
+                `;
+                
+                let btnPlay = header.querySelector('.play-intera-playlist');
+                btnPlay.onclick = function(event) {
+                    event.stopPropagation();
+                    if(braniReali.length > 0) avviaPlaylist(braniReali, 0);
+                };
+                
+                header.onclick = function() {
+                    let lista = this.nextElementSibling;
+                    let icona = this.querySelector('.freccia-tendina');
+                    let staAprendo = (lista.style.display === 'none'); 
+
+                    // Chiude tutte le altre tendine (incluse quelle ufficiali)
+                    document.querySelectorAll('.episodes-list').forEach(l => l.style.display = 'none');
+                    document.querySelectorAll('.freccia-tendina').forEach(i => i.innerText = '▼');
+
+                    if (staAprendo) {
+                        lista.style.display = 'block';
+                        icona.innerText = '▲';
+                    }
+                };
+                divPl.appendChild(header);
+
+                // LISTA DEI BRANI
+                let lista = document.createElement('div');
+                lista.className = 'episodes-list'; 
+                lista.style.background = 'transparent'; 
+                lista.style.display = 'none'; 
+                
+                braniReali.forEach((brano, index) => {
+                    let btn = document.createElement('div');
+                    btn.className = 'episode-item'; 
+                    btn.style.padding = '10px';
+                    btn.style.alignItems = 'center';
+                    
+                    let partiNome = brano.name.split(' - ');
+                    let nomePulitoTotal = partiNome[0].split(' ').slice(1).join(' '); 
+                    let artista = partiNome[1] || "Artista Sconosciuto"; 
+                    
+                    btn.innerHTML = `
+                        <div class="check-area" style="color:#1DB954; margin-right: 15px; font-size: 16px;">🎵</div>
+                        <div class="episode-content" style="cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+                            <span style="font-weight: bold; font-size: 14px; margin-bottom: 3px;">${nomePulitoTotal}</span>
+                            <span style="opacity:0.7; color:#ddd; font-size: 11px;">👤 ${artista}</span>
+                        </div>
+                    `;
+                    
+                    btn.onclick = () => avviaPlaylist(braniReali, index);
+                    lista.appendChild(btn);
+                });
+
+                divPl.appendChild(lista);
+                container.appendChild(divPl);
+            });
+        }
+
+        // 4. ELIMINA PLAYLIST
+        function eliminaPlaylist(id, event) {
+            event.stopPropagation(); // Evita che si apra la tendina cliccando il cestino
+            if(confirm("Sei sicuro di voler eliminare questa playlist?")) {
+                playlistPersonali = playlistPersonali.filter(p => p.id !== id);
+                localStorage.setItem('miePlaylistSpotify', JSON.stringify(playlistPersonali));
+                renderizzaPlaylistPersonali(); // Aggiorna lo schermo
+            }
+        }
+
+        // 5. MODIFICA PLAYLIST (Riapre il menù)
+        function modificaPlaylist(id, event) {
+            event.stopPropagation();
+            apriMenuCreazionePlaylist(id); // Apre il modale passando l'ID!
+        }
+        function apriMusica() {
+            document.querySelectorAll('video, audio').forEach(media => media.pause());
+            
+            document.getElementById('bivio-section').style.display='none';
+            document.getElementById('main-app').style.display='none';
+            document.getElementById('music-app').style.display='block';
+            
+            renderizzaMusica(); // Disegna le ufficiali
+            renderizzaPlaylistPersonali(); // DISEGNA LE TUE!
+        }
         
     </script>
 </body>
