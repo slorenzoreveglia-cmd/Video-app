@@ -664,16 +664,18 @@ function videoFinito(epName, videoElement) {
                 let nomeVisualizzato = NOMI_PLAYLIST[pl] || `Playlist ${parseInt(pl)}`;
 
                 // 1. LA TENDINA: Titolo a sx, Play al centro, Freccia a dx. Più esile!
+                // 1. LA TENDINA UFFICIALE: Tutto forzato su una riga!
                 let header = document.createElement('div');
                 header.className = 'season-tab'; 
                 header.style.display = 'flex';
                 header.style.alignItems = 'center';
-                header.style.padding = '8px 15px'; // Questo la rende "stretta" come le stagioni
+                header.style.padding = '8px 15px'; 
+                header.style.whiteSpace = 'nowrap'; // FORZA TUTTO SU UNA RIGA
                 
                 header.innerHTML = `
-                    <span style="font-weight: bold; flex-grow: 1; text-align: left;">🎧 ${nomeVisualizzato}</span>
-                    <button class="play-intera-playlist" style="background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 15px; padding: 4px 12px; cursor: pointer; font-weight: bold; font-size: 11px; margin-right: 15px; transition: 0.2s;">▶️ Play</button>
-                    <span class="freccia-tendina" style="font-weight: bold;">▼</span>
+                    <span style="font-weight: bold; flex-grow: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; margin-right: 10px;">🎧 ${nomeVisualizzato}</span>
+                    <button class="play-intera-playlist" style="background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 15px; padding: 4px 12px; cursor: pointer; font-weight: bold; font-size: 11px; transition: 0.2s; flex-shrink: 0;">▶️ Play</button>
+                    <span class="freccia-tendina" style="font-weight: bold; margin-left: 15px;">▼</span>
                 `;
                 
                 // Cliccando "Play", parte tutta la playlist da zero
@@ -758,16 +760,6 @@ function videoFinito(epName, videoElement) {
         }
 
         // 4. I Comandi con FEEDBACK VISIVO
-        function nextTrack() {
-            if (!codaCorrente.length) return;
-            if (isShuffle) {
-                indiceCorrente = Math.floor(Math.random() * codaCorrente.length);
-            } else {
-                indiceCorrente++;
-                if (indiceCorrente >= codaCorrente.length) indiceCorrente = 0; 
-            }
-            caricaBrano(indiceCorrente);
-        }
 
         function prevTrack() {
             if (!codaCorrente.length) return;
@@ -776,10 +768,48 @@ function videoFinito(epName, videoElement) {
             caricaBrano(indiceCorrente);
         }
 
+        let braniDaSuonare = []; // Memoria per il nuovo Shuffle "intelligente"
+
         function toggleShuffle() {
-            isShuffle = !isShuffle;
-            // Aggiunge o toglie la classe CSS che fa illuminare il tasto
-            document.getElementById('btn-shuffle').classList.toggle('control-active', isShuffle);
+            shuffleAttivo = !shuffleAttivo;
+            let btn = document.getElementById('btn-shuffle');
+            if (shuffleAttivo) {
+                btn.classList.add('control-active');
+                braniDaSuonare = []; // Svuota la memoria quando lo attivi
+            } else {
+                btn.classList.remove('control-active');
+            }
+        }
+
+        function nextTrack() {
+            if (!playlistCorrente) return;
+            
+            if (shuffleAttivo) {
+                // Se abbiamo finito le carte nel mazzo, lo ricreiamo
+                if (braniDaSuonare.length === 0) {
+                    for (let i = 0; i < playlistCorrente.length; i++) {
+                        if (i !== indiceCorrente) braniDaSuonare.push(i); // Mette tutte tranne quella che sta già suonando
+                    }
+                    // Mischia il mazzo (Algoritmo Fisher-Yates)
+                    for (let i = braniDaSuonare.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [braniDaSuonare[i], braniDaSuonare[j]] = [braniDaSuonare[j], braniDaSuonare[i]];
+                    }
+                }
+                
+                // Pesca la carta in cima al mazzo e la rimuove
+                if (braniDaSuonare.length > 0) {
+                    let prossimoIndice = braniDaSuonare.pop();
+                    avviaPlaylist(playlistCorrente, prossimoIndice, true);
+                } else {
+                    avviaPlaylist(playlistCorrente, 0, true); // Fallback
+                }
+            } else {
+                // Comportamento normale (ordine alfabetico/numerico)
+                let prossimo = indiceCorrente + 1;
+                if (prossimo >= playlistCorrente.length) prossimo = 0;
+                avviaPlaylist(playlistCorrente, prossimo, true);
+            }
         }
 
         function toggleLoop() {
