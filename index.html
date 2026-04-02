@@ -756,25 +756,31 @@ function videoFinito(epName, videoElement) {
             player.play().catch(e => console.log("Autoplay bloccato"));
         }
 
-        // 4. I Comandi con FEEDBACK VISIVO
+// Variabili globali necessarie per far funzionare lo Shuffle
+        let shuffleAttivo = false;
+        let braniDaSuonare = []; 
 
         function prevTrack() {
-            if (!codaCorrente.length) return;
-            indiceCorrente--;
-            if (indiceCorrente < 0) indiceCorrente = codaCorrente.length - 1;
-            caricaBrano(indiceCorrente);
+            if (!playlistCorrente) return; // Usa la memoria nuova!
+            
+            let precedente = indiceCorrente - 1;
+            // Se eravamo alla prima canzone e andiamo indietro, salta all'ultima!
+            if (precedente < 0) precedente = playlistCorrente.length - 1; 
+            
+            avviaPlaylist(playlistCorrente, precedente, true); // Usa la funzione nuova!
         }
-
-        let braniDaSuonare = []; // Memoria per il nuovo Shuffle "intelligente"
 
         function toggleShuffle() {
             shuffleAttivo = !shuffleAttivo;
             let btn = document.getElementById('btn-shuffle');
+            
             if (shuffleAttivo) {
-                btn.classList.add('control-active');
+                // Accendiamo il tasto direttamente con il "bagliore" verde fluo
+                btn.style.textShadow = "0px 0px 10px #1DB954"; 
                 braniDaSuonare = []; // Svuota la memoria quando lo attivi
             } else {
-                btn.classList.remove('control-active');
+                // Spegniamo il tasto
+                btn.style.textShadow = "none";
             }
         }
 
@@ -785,30 +791,30 @@ function videoFinito(epName, videoElement) {
                 // Se abbiamo finito le carte nel mazzo, lo ricreiamo
                 if (braniDaSuonare.length === 0) {
                     for (let i = 0; i < playlistCorrente.length; i++) {
-                        if (i !== indiceCorrente) braniDaSuonare.push(i); // Mette tutte tranne quella che sta già suonando
+                        if (i !== indiceCorrente) braniDaSuonare.push(i);
                     }
-                    // Mischia il mazzo (Algoritmo Fisher-Yates)
+                    // Mischia il mazzo
                     for (let i = braniDaSuonare.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
                         [braniDaSuonare[i], braniDaSuonare[j]] = [braniDaSuonare[j], braniDaSuonare[i]];
                     }
                 }
                 
-                // Pesca la carta in cima al mazzo e la rimuove
+                // Pesca la carta e avvia
                 if (braniDaSuonare.length > 0) {
                     let prossimoIndice = braniDaSuonare.pop();
                     avviaPlaylist(playlistCorrente, prossimoIndice, true);
                 } else {
-                    avviaPlaylist(playlistCorrente, 0, true); // Fallback
+                    avviaPlaylist(playlistCorrente, 0, true); 
                 }
             } else {
-                // Comportamento normale (ordine alfabetico/numerico)
+                // Comportamento normale
                 let prossimo = indiceCorrente + 1;
                 if (prossimo >= playlistCorrente.length) prossimo = 0;
                 avviaPlaylist(playlistCorrente, prossimo, true);
             }
         }
-
+        
         function toggleLoop() {
             isLoop = !isLoop;
             const player = document.getElementById('player-audio');
