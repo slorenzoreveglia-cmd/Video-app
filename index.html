@@ -761,13 +761,13 @@ function videoFinito(epName, videoElement) {
         let braniDaSuonare = []; 
 
         function prevTrack() {
-            if (!playlistCorrente) return; // Usa la memoria nuova!
+            if (!codaCorrente || codaCorrente.length === 0) return; 
             
             let precedente = indiceCorrente - 1;
             // Se eravamo alla prima canzone e andiamo indietro, salta all'ultima!
-            if (precedente < 0) precedente = playlistCorrente.length - 1; 
+            if (precedente < 0) precedente = codaCorrente.length - 1; 
             
-            avviaPlaylist(playlistCorrente, precedente, true); // Usa la funzione nuova!
+            avviaPlaylist(codaCorrente, precedente); 
         }
 
         function toggleShuffle() {
@@ -785,12 +785,12 @@ function videoFinito(epName, videoElement) {
         }
 
         function nextTrack() {
-            if (!playlistCorrente) return;
+            if (!codaCorrente || codaCorrente.length === 0) return;
             
             if (shuffleAttivo) {
                 // Se abbiamo finito le carte nel mazzo, lo ricreiamo
                 if (braniDaSuonare.length === 0) {
-                    for (let i = 0; i < playlistCorrente.length; i++) {
+                    for (let i = 0; i < codaCorrente.length; i++) {
                         if (i !== indiceCorrente) braniDaSuonare.push(i);
                     }
                     // Mischia il mazzo
@@ -803,15 +803,15 @@ function videoFinito(epName, videoElement) {
                 // Pesca la carta e avvia
                 if (braniDaSuonare.length > 0) {
                     let prossimoIndice = braniDaSuonare.pop();
-                    avviaPlaylist(playlistCorrente, prossimoIndice, true);
+                    avviaPlaylist(codaCorrente, prossimoIndice);
                 } else {
-                    avviaPlaylist(playlistCorrente, 0, true); 
+                    avviaPlaylist(codaCorrente, 0); 
                 }
             } else {
                 // Comportamento normale
                 let prossimo = indiceCorrente + 1;
-                if (prossimo >= playlistCorrente.length) prossimo = 0;
-                avviaPlaylist(playlistCorrente, prossimo, true);
+                if (prossimo >= codaCorrente.length) prossimo = 0;
+                avviaPlaylist(codaCorrente, prossimo);
             }
         }
         
