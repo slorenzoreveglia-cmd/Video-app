@@ -6,11 +6,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SU_Streaming">
+    <meta name="apple-mobile-web-app-title" content="SU Streaming">
+    <meta name="application-name" content="SU Streaming">
+    <meta property="og:site_name" content="SU Streaming">
     <link rel="apple-touch-icon" href="https://res.cloudinary.com/dcsvok2jp/image/upload/v1773007380/Logo_2_nmufb2.jpg">
     <link rel="icon" href="https://res.cloudinary.com/dcsvok2jp/image/upload/v1773007380/Logo_2_nmufb2.jpg">
     <link rel="manifest" href="manifest.json">
-    <title>SU_Streaming</title>
+    <title>SU Streaming</title>
     <style>
         /* Sovrascriviamo la tendina per farci stare la barra */
         .season-tab { flex-direction: column; align-items: stretch; gap: 8px; }
@@ -128,7 +130,7 @@
         
         <div class="intro-box" style="padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center;">
             <h3 id="titolo-brano-corrente" style="margin-top: 0; margin-bottom: 10px; font-size: 16px;">Nessun brano</h3>
-            <audio id="player-audio" controls style="width: 100%; outline: none; margin-bottom: 10px; height: 35px;"></audio>
+            <audio id="player-audio" controls disableRemotePlayback controls style="width: 100%; outline: none; margin-bottom: 10px; height: 35px;"></audio>
             
             <div style="display: flex; justify-content: center; gap: 25px; margin-top: 5px;">
                 <button id="btn-shuffle" onclick="toggleShuffle()" class="control-btn">🔀</button>
