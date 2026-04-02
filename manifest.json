@@ -1,6 +1,6 @@
 {
-  "name": "SU_Streaming",
-  "short_name": "SU_Streaming",
+  "name": "SU Streaming",
+  "short_name": "SU Streaming",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#1a1a1a",
