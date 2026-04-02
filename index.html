@@ -126,12 +126,8 @@
             <button onclick="apriStreaming()" style="padding: 5px 10px; background: #e50914; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">🎬 Passa a Streaming</button>
         </div>
         
-        <div style="background: rgba(0,0,0,0.8); padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.2);">
-            <h3 id="titolo-brano-corrente" style="color: #1DB954; margin-top: 0; margin-bottom: 10px; font-size: 16px;">Nessun brano</h3>
-            
-            <div class="intro-box" style="padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center;">
+        <div class="intro-box" style="padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center;">
             <h3 id="titolo-brano-corrente" style="margin-top: 0; margin-bottom: 10px; font-size: 16px;">Nessun brano</h3>
-            
             <audio id="player-audio" controls style="width: 100%; outline: none; margin-bottom: 10px; height: 35px;"></audio>
             
             <div style="display: flex; justify-content: center; gap: 25px; margin-top: 5px;">
@@ -155,28 +151,34 @@
         </div>
 
     </div>
-        <div id="main-app" style="display:none;">
-            <div class="top-bar">
-                <button class="btn-tiny" onclick="resetPin()">⚙️ PIN</button>
-                <button onclick="apriMusica()" style="padding: 10px 20px; margin-bottom: 20px; background: #1DB954; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">🎵 Passa a Spotify</button>
-                <button class="btn-tiny" id="theme-btn" style="background:white;color:black">🎨 COLORE</button>
-            </div>
-            
-            <div class="intro-box">
-                <h2>Steven Universe: The Complete Collection ✨</h2>
-                Questa web app nasce dal desiderio di raccogliere in un unico posto l'intero universo creato da Rebecca Sugar. Al suo interno troverai:
-                <ul class="intro-list">
-                    <li>💎 Tutte le stagioni della serie originale</li>
-                    <li>🎬 Steven Universe: Il Film</li>
-                    <li>🌟 Steven Universe Future</li>
-                </ul>
-                <span class="dev-note-title">Nota dello sviluppatore:</span>
-                <span class="dev-note-text">Essendo il mio primo progetto nel campo dello sviluppo web, l'applicazione potrebbe presentare qualche piccola imperfezione tecnica. È un lavoro in continua evoluzione che mi servirà per testare e migliorare le mie competenze.<br>Sviluppato con passione da Lorenzo Reveglia.</span>
-            </div>
 
-            <div id="seasons-container"></div>
+    <div id="main-app" style="display:none; padding: 10px; max-width: 500px; margin: auto;">
+        
+        <div class="top-bar">
+            <button class="btn-tiny" onclick="resetPin()">⚙️ PIN</button>
+            <button onclick="apriMusica()" style="padding: 5px 10px; background: #1DB954; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">🎵 Passa a Spotify</button>
+            <button class="btn-tiny" id="theme-btn" style="background:white;color:black">🎨 COLORE</button>
+        </div>
+        
+        <div class="intro-box">
+            <h2>Steven Universe: The Complete Collection ✨</h2>
+            Questa web app nasce dal desiderio di raccogliere in un unico posto l'intero universo creato da Rebecca Sugar. Al suo interno troverai:
+            <ul class="intro-list">
+                <li>💎 Tutte le stagioni della serie originale</li>
+                <li>🎬 Steven Universe: Il Film</li>
+                <li>🌟 Steven Universe Future</li>
+            </ul>
+            <span class="dev-note-title">Nota dello sviluppatore:</span>
+            <span class="dev-note-text">Essendo il mio primo progetto nel campo dello sviluppo web, l'applicazione potrebbe presentare qualche piccola imperfezione tecnica. È un lavoro in continua evoluzione che mi servirà per testare e migliorare le mie competenze.<br>Sviluppato con passione da Lorenzo Reveglia.</span>
         </div>
 
+        <div class="intro-box" style="padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center;">
+            <h3 id="titolo-video-corrente" style="margin-top: 0; margin-bottom: 10px; font-size: 16px;">Nessun video in riproduzione</h3>
+            <video id="video-player" controls style="width: 100%; border-radius: 8px; outline: none;"></video>
+        </div>
+
+        <div id="seasons-container"></div>
+        
     </div>
         
         <div id="modal-crea-playlist" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; padding:20px; overflow-y:auto; box-sizing:border-box; backdrop-filter: blur(5px);">
