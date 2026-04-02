@@ -746,14 +746,38 @@ function videoFinito(epName, videoElement) {
             if (!codaCorrente || codaCorrente.length === 0) return;
             let brano = codaCorrente[index];
             
-            // Estrae solo il titolo per il display in alto
-            let nomePulitoTotal = brano.name.split(' - ')[0].split(' ').slice(1).join(' ');
+            // Spezza il nome dal trattino
+            let partiNome = brano.name.split(' - ');
+            
+            // 1. Estrae il titolo (rimuovendo l'eventuale numero iniziale come facevi già tu)
+            let nomePulitoTotal = partiNome[0].split(' ').slice(1).join(' ') || partiNome[0];
+            
+            // 2. Estrae l'artista (la parte dopo il trattino, se non c'è scrive "SU Streaming")
+            let artistaTesto = partiNome[1] ? partiNome[1].trim() : 'SU Streaming';
             
             const player = document.getElementById('player-audio');
             document.getElementById('titolo-brano-corrente').innerText = nomePulitoTotal;
             
             player.src = brano.url;
             player.play().catch(e => console.log("Autoplay bloccato"));
+
+            // --- NUOVO PEZZO: AGGIORNA LA LOCANDINA NEL TELEFONO! ---
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: nomePulitoTotal,     // Mette il titolo estratto
+                    artist: artistaTesto,       // Mette l'artista estratto
+                    album: 'The Complete Collection', 
+                    artwork: [
+                        { 
+                            // Questo è il tuo logo ufficiale dell'app!
+                            src: 'https://res.cloudinary.com/dcsvok2jp/image/upload/v1773007380/Logo_2_nmufb2.jpg', 
+                            sizes: '512x512', 
+                            type: 'image/jpeg' 
+                        }
+                    ]
+                });
+            }
+            // ---------------------------------------------------------
         }
 
 // Variabili globali necessarie per far funzionare lo Shuffle e la Cronologia
@@ -844,6 +868,22 @@ function videoFinito(epName, videoElement) {
                     if (!this.loop) { nextTrack(); }
                 });
             }
+            // --- NUOVO PEZZO: MEDIA SESSION (Tasti Notifica) ---
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.setActionHandler('previoustrack', function() {
+                    prevTrack(); // Usa la tua funzione!
+                });
+                navigator.mediaSession.setActionHandler('nexttrack', function() {
+                    nextTrack(); // Usa la tua funzione!
+                });
+                navigator.mediaSession.setActionHandler('play', function() {
+                    if(player) player.play();
+                });
+                navigator.mediaSession.setActionHandler('pause', function() {
+                    if(player) player.pause();
+                });
+            }
+            // ---------------------------------------------------
             
             // Collega il tasto colore nella sezione musica al sistema temi esistente
             const themeBtnMusic = document.getElementById('theme-btn-music');
