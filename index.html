@@ -636,44 +636,32 @@ function videoFinito(epName, videoElement) {
             }
         }
 
-        function checkPin() { // O come hai chiamato tu questa funzione
-            const input = document.getElementById('pin-input').value; // Metti il vero ID del tuo input
+        function checkPin() { 
+            // Usiamo .trim() per evitare problemi con spazi vuoti invisibili
+            const input = document.getElementById('pin-input').value.trim(); 
+            const pinSalvato = localStorage.getItem('user_pin') || "2102";
 
-            // 1. IL TUO CIAOSCREEN (Lascia i tuoi ID originali qui)
+            // 1. IL TUO CIAOSCREEN ORIGINALE (0000)
             if (input === '0000') {
-                document.getElementById('pin-section').style.display='none';
-                document.getElementById('secret-app').style.display='block';
-                document.body.classList.add('logged-in'); // O come lo aprivi tu
+                document.getElementById('pin-section').style.display = 'none';
+                document.getElementById('secret-app').style.display = 'block';
+                document.body.classList.add('logged-in'); 
             } 
             // 2. IL NUOVO MONDO TROLL (1234)
             else if (input === '1234') {
                 document.getElementById('pin-section').style.display = 'none';
-                document.getElementById('troll-bivio-section').style.display = 'block'; // Apre la finta app
+                document.getElementById('troll-bivio-section').style.display = 'block'; 
                 document.body.classList.add('logged-in');
             }
-            // 3. IL MONDO VERO (2102)
-            else if (input === (localStorage.getItem('user_pin') || "2102")) {
-                document.getElementById('pin-section').style.display='none';
-                document.getElementById('bivio-section').style.display='block'; // Apre il bivio
-                document.body.classList.add('logged-in');
-            } else { 
-                alert("PIN Errato! Il PIN di base è 1234"); 
-            }
-        }
-            const input = document.getElementById('pin-input').value;
-            // Se il pin è quello di base (0000) ti manda ancora alle impostazioni segrete
-            if (input === "0000") {
-                document.getElementById('pin-section').style.display='none';
-                document.getElementById('secret-app').style.display='block';
+            // 3. IL MONDO VERO (2102 o il pin personalizzato dell'utente)
+            else if (input === pinSalvato) {
+                document.getElementById('pin-section').style.display = 'none';
+                document.getElementById('bivio-section').style.display = 'block'; 
                 document.body.classList.add('logged-in');
             } 
-            // Se il pin è corretto, ORA TI MANDA AL BIVIO!
-            else if (input === (localStorage.getItem('user_pin') || "1234")) {
-                document.getElementById('pin-section').style.display='none';
-                document.getElementById('bivio-section').style.display='block'; // Apre il bivio
-                document.body.classList.add('logged-in');
-            } else { 
-                alert("PIN Errato! Il PIN di base è 0000"); 
+            // 4. ERRORE - SE IL PIN NON È NESSUNO DEI PRECEDENTI
+            else { 
+                alert("PIN Errato! Il PIN di base è 1234"); 
             }
         }
 
