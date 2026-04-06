@@ -6,13 +6,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SU Streaming">
-    <meta name="application-name" content="SU Streaming">
-    <meta property="og:site_name" content="SU Streaming">
+    <meta name="apple-mobile-web-app-title" content="il Grappolo">
+    <meta name="application-name" content="il Grappolo">
+    <meta property="og:site_name" content="il Grappolo">
     <link rel="apple-touch-icon" href="https://res.cloudinary.com/dcsvok2jp/image/upload/v1775217509/Logo_2_f2njec.png">
     <link rel="icon" href="https://res.cloudinary.com/dcsvok2jp/image/upload/v1775217509/Logo_2_f2njec.png">
     <link rel="manifest" href="manifest.json">
-    <title>SU Streaming</title>
+    <title>il Grappolo</title>
     <style>
         /* Sovrascriviamo la tendina per farci stare la barra */
         .season-tab { flex-direction: column; align-items: stretch; gap: 8px; }
@@ -92,13 +92,21 @@
             color: white !important;
             opacity: 0.9;
         }
+/* Nasconde il tasto Chromecast dai dispositivi mobili */
+audio::-webkit-media-controls-overlay-cast-button {
+    display: none !important;
+}
+
+audio::-internal-media-controls-overlay-cast-button {
+    display: none !important;
+}
         
     </style>
 </head>
 <body>
     <div class="container">
         <div id="pin-section" class="login-box">
-            <h1>SU_Streaming</h1>
+            <h1>il Grappolo</h1>
             <input type="tel" id="pin-input" maxlength="8" placeholder="****" autocomplete="off">
             <br><button class="primary-btn" onclick="checkPin()">Accedi</button>
         </div>
@@ -130,7 +138,7 @@
         
         <div class="intro-box" style="padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center;">
             <h3 id="titolo-brano-corrente" style="margin-top: 0; margin-bottom: 10px; font-size: 16px;">Nessun brano</h3>
-            <audio id="player-audio" controls disableRemotePlayback controls style="width: 100%; outline: none; margin-bottom: 10px; height: 35px;"></audio>
+            <audio id="player-audio" controls disableRemotePlayback controlsList="nodownload noremoteplayback" controls style="width: 100%; outline: none; margin-bottom: 10px; height: 35px;"></audio>
             
             <div style="display: flex; justify-content: center; gap: 25px; margin-top: 5px;">
                 <button id="btn-shuffle" onclick="toggleShuffle()" class="control-btn">🔀</button>
@@ -355,15 +363,15 @@
             { name: "05x16 Le storie di Beach City - Letters to Lars", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773147469/Steven.Universe.05x16.Le.Storie.di.Beach.City.Letters.to.Lar_hevhag.mp4" },
             { name: "05x17 Qual è il tuo problema? - What's Your Problem?", url: "" },
             { name: "05x18 Una Rosa senza spine - A Single Pale Rose", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773147485/Steven.Universe.05x18.Una.Rosa.senza.Spine.A.Single.Pale.Ros_gm843h.mp4" },
-            { name: "05x19 Riunione (Parte 1) - Reunited (Part 1)", url: "" },
-            { name: "05x20 Riunione (Parte 2) - Reunited (Part 2)", url: "" },
-            { name: "05x21 Legs From Here to Homeworld - Legs From Here to Homeworld", url: "" },
-            { name: "05x22 Familiar - Familiar", url: "" },
+            { name: "05x19 La vera storia di Rose - Now We're Only Falling Apart", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775487705/Steven.Universe.05x19.La.Vera.Storia.di.Rose.Now.We.re.Only._ea7hej.mp4" },
+            { name: "05x20 Tu come stai? - What's Your Problem?", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775487705/Steven.Universe.05x20.Tu.Come.Stai.What.s.Your.Problem.23455_daoduc.mp4" },
+            { name: "05x21 Stare insieme - The Question", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775487705/Steven.Universe.05x21.Stare.Insieme.The.Question.2345598.mkv_ynfosj.mp4" },
+            { name: "05x22 La sorpresa - Made of Honor", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775487689/Steven.Universe.05x22.La.Sorpresa.Made.of.Honor.2345599.mkv._cuh0ey.mp4" },
             { name: "05x23 Together Alone - Together Alone", url: "" },
-            { name: "05x24 Escapism - Escapism", url: "" },
+            { name: "05x24 Si torna a Casa - Legs From Here to Homeworld", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775487704/Steven.Universe.05x24.Si.Torna.a.Casa.Legs.From.Here.To.Home_snuowc.mp4" },
             { name: "05x25 Il ruolo di Rosa - Familiar", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1773147493/Steven.Universe.05x25.Il.ruolo.di.Rosa.Familiar.2345602.mkv._bsj9xi.mp4" },
             { name: "05x26 QUALCOSA", url: "" },
-            { name: "05x27 Di nuovo insieme - Back to the Kindergarten", url: "" },
+            { name: "05x27 Un lungo viaggio - Escapism", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775487705/Steven.Universe.05x27.Un.lungo.viaggio.Escapism.2345604.mkv._cpso4r.mp4" },
             { name: "05x28 Change Your Mind (Speciale Finale) - Change Your Mind", url: "" },
 
             // STAGIONE 6 (Future)
@@ -413,6 +421,20 @@
             { name: "01x16 Lapis Lazuli - Zach Callison", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775065055/Lapis_Lazuli_feat_Zach_Callison_uk92p7.mp3" },
             { name: "01x17 Wailing Stone - Tom Scharpling", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775065056/Wailing_Stone_feat_Tom_Scharpling_axg5go.mp3" },
             { name: "01x18 Stronger than you - Estelle", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775065059/Stronger_Than_You_feat_Estelle_cbvf04.mp3" },
+            { name: "01x19 Full Disclosure - Zach Callison", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490223/Full_Disclosure_feat_Zach_Callison_tndkqk.mp3" },
+            { name: "01x20 The jam song - Zach Callison, Grace Rolek", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490222/Steven_Universe_Official_Soundtrack___The_Jam_Song___Cartoon_Network_g7beyi.mp3" },
+            { name: "01x21 Do it for her - Deedee Magno Hall, Grace Rolek", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490226/Steven_Universe_Official_Soundtrack___Do_It_For_Here___Cartoon_Network_wdma0v.mp3" },
+            { name: "01x22 What Can I Do For You - Tom Scharpling, Susan Egan", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490226/Steven_Universe_Official_Soundtrack___What_Can_I_Do_For_You___Cartoon_Network_y25rdy.mp3" },
+            { name: "01x23 Tower of Mistakes - Michaela Dietz", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490222/Steven_Universe_Official_Soundtrack___Tower_of_Mistakes___Cartoon_Network_c8zxez.mp3" },
+            { name: "01x24 Haven't You Noticed (I'm a Star) - Kate Micucci", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490223/Steven_Universe_Official_Soundtrack___Havent_You_Noticed_Im_a_Star___Cartoon_Network_fofluo.mp3" },
+            { name: "01x25 Something Entirely New - Erica Luttrell, Charlyne Yi", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490223/Steven_Universe_Official_Soundtrack___Something_Entirely_New___Cartoon_Network_ba8za2.mp3" },
+            { name: "01x26 Peace and Love (on the planet Earth) - Zach Callison, Shelby Rabara", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490223/Peace_and_Love_on_the_Planet_Earth_Official_Song___Song___Steven_Universe___Cartoon_Network_dy7lfk.mp3" },
+            { name: "01x27 Don't Cost Nothing - Zach Callison, Tom Scharpling", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490224/Steven_Universe_Official_Soundtrack___Dont_Cost_Nothing___Cartoon_Network_nhpaeh.mp3" },
+            { name: "01x28 Empire City - Zach Callison, Tom Scharpling", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490224/Steven_Universe_Official_Soundtrack___Empire_City___Cartoon_Network_jotujb.mp3" },
+            { name: "01x29 Mr. Greg - Zach Callison, Tom Scharpling, Deedee Magno Hall", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490226/Mr_Greg_feat_Tom_Scharpling_Zach_Callison_Deedee_Magno_Hall_Eric_Bauza_nba346.mp3" },
+            { name: "01x30 It's Over, Isn't It? - Deedee Magno Hall", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490226/Its_Over_Isnt_It_feat_Deedee_Magno_Hall_nwwioj.mp3" },
+            { name: "01x31 Both of You - Zach Callison, Tom Scharpling, Deedee Magno Hall", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490227/Both_of_You_feat_Zach_Callison_Tom_Scharpling_Deedee_Magno_Hall_apeafj.mp3" },
+            { name: "01x32 Don't Cost Nothing (reprise) - Zach Callison, Tom Scharpling, Deedee Magno Hall", url: "https://res.cloudinary.com/dcsvok2jp/video/upload/v1775490225/Dont_Cost_Nothing_feat_Tom_Scharpling_Zach_Callison_Deedee_Magno_Hall_Reprise_t2kvkp.mp3" },
             // { name: "01x ", url: "" },
             
             // PLAYLIST 2 (es. Rap/Trap)
