@@ -203,9 +203,39 @@
             </div>
         </div>
     </div>
+<div id="troll-bivio-section" style="display: none; text-align: center; padding: 20px;">
+    <h2>Area Sperimentale</h2>
+    <br>
+    <button class="btn" onclick="apriTrollVideo()">Streaming Visivo</button>
+    <br><br>
+    <button class="btn" onclick="apriTrollMusica()">Archivio Sonoro</button>
+</div>
+
+<div id="troll-video-section" style="display: none; padding: 15px;">
+    <button class="btn" onclick="tornaAlBivioTroll()">🔙 Indietro</button>
+    <h2 style="color: red;">Archivio Visivo Sperimentale - Fase Alpha</h2>
+    
+    <video id="troll-video-player" controls style="width: 100%; border-radius: 10px; margin-top: 15px;"></video>
+    
+    <div style="margin-top: 20px;">
+        <h3>Cartella: Test Visivi</h3>
+        <button class="btn" onclick="playTrollVideo('LINK_AL_TUO_VIDEO_TROLL.mp4')">▶️ Avvia Test Visivo 01</button>
+    </div>
+</div>
+
+<div id="troll-musica-section" style="display: none; padding: 15px;">
+    <button class="btn" onclick="tornaAlBivioTroll()">🔙 Indietro</button>
+    <h2 style="color: red;">Progetto Sonoro Sperimentale - Fase Beta</h2>
+    
+    <audio id="troll-audio-player" controls style="width: 100%; margin-top: 15px;"></audio>
+    
+    <div style="margin-top: 20px;">
+        <h3>Playlist: Frequenze Beta</h3>
+        <button class="btn" onclick="playTrollAudio('LINK_AL_TUO_AUDIO_TROLL.mp3')">▶️ Avvia Test Sonoro 01</button>
+    </div>
+</div>
         
     <script>
-        let modalitaTroll = false;
         const DATABASE_VIDEO = [
             // ============================================
             // INCOLLA QUI IL TUO DATABASE DATI COMPLETO
@@ -606,32 +636,44 @@ function videoFinito(epName, videoElement) {
             }
         }
 
-        function checkPin() {
-            let input = document.getElementById('pin-input').value; // (Usa il tuo ID)
+        function checkPin() { // O come hai chiamato tu questa funzione
+            const input = document.getElementById('pin-input').value; // Metti il vero ID del tuo input
 
-            // 1. EASTER EGG: CIAOSCREEN (NON TOCCARE)
+            // 1. IL TUO CIAOSCREEN (Lascia i tuoi ID originali qui)
             if (input === '0000') {
-                // ... Qui ci sarà già il tuo codice originale che fa apparire il ciaoscreen ...
-                // Lascialo esattamente com'è!
-            }
-            // 2. NUOVO EASTER EGG: MODALITÀ TROLL
+                document.getElementById('pin-section').style.display='none';
+                document.getElementById('secret-app').style.display='block';
+                document.body.classList.add('logged-in'); // O come lo aprivi tu
+            } 
+            // 2. IL NUOVO MONDO TROLL (1234)
             else if (input === '1234') {
-                modalitaTroll = true;
                 document.getElementById('pin-section').style.display = 'none';
-                document.getElementById('bivio-section').style.display = 'block'; 
+                document.getElementById('troll-bivio-section').style.display = 'block'; // Apre la finta app
                 document.body.classList.add('logged-in');
-                preparaScherzoTroll(); // Avvia la trappola!
             }
-            // 3. ACCESSO NORMALE (CON IL NUOVO PIN 2102)
+            // 3. IL MONDO VERO (2102)
             else if (input === (localStorage.getItem('user_pin') || "2102")) {
-                modalitaTroll = false;
-                document.getElementById('pin-section').style.display = 'none';
-                document.getElementById('bivio-section').style.display = 'block'; 
+                document.getElementById('pin-section').style.display='none';
+                document.getElementById('bivio-section').style.display='block'; // Apre il bivio
+                document.body.classList.add('logged-in');
+            } else { 
+                alert("PIN Errato! Il PIN di base è 1234"); 
+            }
+        }
+            const input = document.getElementById('pin-input').value;
+            // Se il pin è quello di base (0000) ti manda ancora alle impostazioni segrete
+            if (input === "0000") {
+                document.getElementById('pin-section').style.display='none';
+                document.getElementById('secret-app').style.display='block';
                 document.body.classList.add('logged-in');
             } 
-            // 4. PIN ERRATO
-            else { 
-                alert("PIN Errato! Il PIN di base è 1234"); 
+            // Se il pin è corretto, ORA TI MANDA AL BIVIO!
+            else if (input === (localStorage.getItem('user_pin') || "1234")) {
+                document.getElementById('pin-section').style.display='none';
+                document.getElementById('bivio-section').style.display='block'; // Apre il bivio
+                document.body.classList.add('logged-in');
+            } else { 
+                alert("PIN Errato! Il PIN di base è 0000"); 
             }
         }
 
@@ -667,18 +709,11 @@ function videoFinito(epName, videoElement) {
             document.body.classList.add(`theme-${currentTheme}`);
             localStorage.setItem('user_theme', currentTheme);
         };
-
+        
         function resetPin() { 
             let nuovo = prompt("Nuovo PIN:");
-            // Blocca sia lo 0000 che il 1234
-            if (nuovo === "0000" || nuovo === "1234") { 
-                alert("Riservato! PIN di sistema!"); 
-                return; 
-            }
-            if(nuovo) { 
-                localStorage.setItem('user_pin', nuovo); 
-                alert("PIN aggiornato!"); 
-            }
+            if (nuovo === "0000") { alert("Riservato! Pin di sistema!"); return; }
+            if(nuovo) { localStorage.setItem('user_pin', nuovo); alert("PIN aggiornato!"); }
         }
         
 // Funzione per disegnare le playlist preimpostate sullo schermo
@@ -1173,38 +1208,41 @@ function videoFinito(epName, videoElement) {
             renderizzaMusica(); // Disegna le ufficiali
             renderizzaPlaylistPersonali(); // DISEGNA LE TUE!
         }
-        
-        function preparaScherzoTroll() {
-            // 1. Nascondiamo i tasti "pericolosi"
-            // Usiamo querySelector perché sono bottoni dentro il menù
-            const btnReset = document.querySelector('button[onclick="resetPin()"]');
-            const btnCrea = document.querySelector('button[onclick="apriMenuCreazionePlaylist()"]');
-    
-            if (btnReset) btnReset.style.display = 'none';
-            if (btnCrea) btnCrea.style.display = 'none';
 
-            // 2. Sostituiamo i contenuti veri con quelli finti
-            stagioni = [
-                { 
-                    nome: "Archivio Visivo Sperimentale", 
-                    episodi: [
-                        { titolo: "Fase Alpha - Test 01", url: "https://vostro-video-troll.mp4" }
-                    ] 
-                }
-            ];
+// --- FUNZIONI UNIVERSO TROLL ---
 
-            playlistUfficiali = [
-                { 
-                    nome: "Progetto Sonoro Sperimentale", 
-                    brani: [
-                        { name: "Fase Beta - Test Audio", url: "https://vostro-audio-troll.mp3" }
-                    ] 
-                }
-            ];
-    
-            // Svuotiamo anche le playlist personali per non farle vedere
-            playlistPersonali = []; 
+        function apriTrollVideo() {
+            document.getElementById('troll-bivio-section').style.display = 'none';
+            document.getElementById('troll-video-section').style.display = 'block';
         }
+
+        function apriTrollMusica() {
+            document.getElementById('troll-bivio-section').style.display = 'none';
+            document.getElementById('troll-musica-section').style.display = 'block';
+        }
+
+        function tornaAlBivioTroll() {
+    // Spegne tutto se torni indietro
+            document.getElementById('troll-video-player').pause();
+            document.getElementById('troll-audio-player').pause();
+    
+            document.getElementById('troll-video-section').style.display = 'none';
+            document.getElementById('troll-musica-section').style.display = 'none';
+            document.getElementById('troll-bivio-section').style.display = 'block';
+        }
+
+        function playTrollVideo(url) {
+            let player = document.getElementById('troll-video-player');
+            player.src = url;
+            player.play();
+        }
+
+        function playTrollAudio(url) {
+            let player = document.getElementById('troll-audio-player');
+            player.src = url;
+            player.play();
+        }
+        
     </script>
 </body>
 </html>
