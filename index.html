@@ -203,35 +203,68 @@
             </div>
         </div>
     </div>
-<div id="troll-bivio-section" style="display: none; text-align: center; padding: 20px;">
-    <h2>Area Sperimentale</h2>
-    <br>
-    <button class="btn" onclick="apriTrollVideo()">Streaming Visivo</button>
-    <br><br>
-    <button class="btn" onclick="apriTrollMusica()">Archivio Sonoro</button>
-</div>
-
-<div id="troll-video-section" style="display: none; padding: 15px;">
-    <button class="btn" onclick="tornaAlBivioTroll()">🔙 Indietro</button>
-    <h2 style="color: red;">Archivio Visivo Sperimentale - Fase Alpha</h2>
-    
-    <video id="troll-video-player" controls style="width: 100%; border-radius: 10px; margin-top: 15px;"></video>
-    
-    <div style="margin-top: 20px;">
-        <h3>Cartella: Test Visivi</h3>
-        <button class="btn" onclick="playTrollVideo('LINK_AL_TUO_VIDEO_TROLL.mp4')">▶️ Avvia Test Visivo 01</button>
+<div id="troll-bivio-section" style="display:none; text-align:center; padding-top: 20vh;">
+    <h1 style="color: white; margin-bottom: 40px;">Di quale servizio vuoi usufruire?</h1>
+    <div style="display: flex; justify-content: center; gap: 20px;">
+        <button onclick="apriTrollVideo()" style="padding: 20px 40px; font-size: 20px; border-radius: 10px; border: none; background: #e50914; color: white; cursor: pointer; font-weight: bold;">🎬 Streaming</button>
+        <button onclick="apriTrollMusica()" style="padding: 20px 40px; font-size: 20px; border-radius: 10px; border: none; background: #1DB954; color: white; cursor: pointer; font-weight: bold;">🎵 Spotify</button>
     </div>
 </div>
 
-<div id="troll-musica-section" style="display: none; padding: 15px;">
-    <button class="btn" onclick="tornaAlBivioTroll()">🔙 Indietro</button>
-    <h2 style="color: red;">Progetto Sonoro Sperimentale - Fase Beta</h2>
+<div id="troll-video-section" style="display:none; padding: 10px; max-width: 500px; margin: auto;">
+    <div class="top-bar">
+        <button class="btn-tiny" onclick="alert('Accesso Negato: Modifica PIN disabilitata in Fase Alpha.')">⚙️ PIN</button>
+        <button onclick="apriTrollMusica()" style="padding: 5px 10px; background: #1DB954; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">🎵 Passa a Spotify</button>
+    </div>
+
+    <div class="intro-box">
+        <h2>🎬 Archivio Visivo</h2>
+        Test visivi sperimentali - Fase Alpha.
+    </div>
+
+    <div class="season-tab" onclick="document.getElementById('troll-episodes').style.display = document.getElementById('troll-episodes').style.display === 'block' ? 'none' : 'block'">
+        <div class="season-header">
+            <span>📁 Simulazioni Visive</span>
+            <span>▼</span>
+        </div>
+    </div>
     
-    <audio id="troll-audio-player" controls style="width: 100%; margin-top: 15px;"></audio>
-    
-    <div style="margin-top: 20px;">
-        <h3>Playlist: Frequenze Beta</h3>
-        <button class="btn" onclick="playTrollAudio('LINK_AL_TUO_AUDIO_TROLL.mp3')">▶️ Avvia Test Sonoro 01</button>
+    <div id="troll-episodes" class="episode-list" style="display: block;">
+        <div class="episode-item" onclick="playTrollVideo('https://res.cloudinary.com/dcsvok2jp/video/upload/v1775556094/aaaaaaaabaco_mktzcm.mp4')">
+            <div class="episode-content">
+                <div class="title-row">
+                    <span class="ep-label">TEST 01</span>
+                    <span class="title-it">Avvia Test Visivo</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <video id="troll-video-player" controls disableRemotePlayback style="width: 100%; border-radius: 12px; margin-top: 15px; background: #000; display: none;"></video>
+</div>
+
+<div id="troll-musica-section" style="display:none; padding: 10px; max-width: 500px; margin: auto;">
+    <div class="top-bar">
+        <button class="btn-tiny" onclick="alert('Accesso Negato: Modifica PIN disabilitata in Fase Beta.')">⚙️ PIN</button>
+        <button class="btn-tiny" style="background:white;color:black">🎨 COLORE</button>
+    </div>
+
+    <div class="intro-box">
+        <h2>🎵 Progetto Sonoro</h2>
+        Archivio Sonoro Sperimentale - Fase Beta.
+        <br><br>
+        <button onclick="apriTrollVideo()" style="padding: 5px 10px; background: #e50914; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">🎬 Passa a Streaming</button>
+    </div>
+
+    <div class="intro-box" style="padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center;">
+        <h3 id="troll-titolo-brano-corrente" style="margin-top: 0; margin-bottom: 10px; font-size: 16px;">Nessun brano in esecuzione</h3>
+        <audio id="troll-audio-player" controls disableRemotePlayback controlsList="nodownload noremoteplayback" style="width: 100%; outline: none; margin-bottom: 10px; height: 35px;"></audio>
+    </div>
+
+    <div class="season-tab" onclick="playTrollAudio('https://res.cloudinary.com/dcsvok2jp/video/upload/v1773947050/audioclubz-audio-club-amapiano-319840_waa60j.mp3', 'Audio Test 01')">
+        <div class="season-header">
+            <span>▶️ Avvia Frequenza di Test 01</span>
+        </div>
     </div>
 </div>
         
@@ -700,8 +733,17 @@ function videoFinito(epName, videoElement) {
         
         function resetPin() { 
             let nuovo = prompt("Nuovo PIN:");
-            if (nuovo === "0000") { alert("Riservato! Pin di sistema!"); return; }
-            if(nuovo) { localStorage.setItem('user_pin', nuovo); alert("PIN aggiornato!"); }
+    
+            // Lo scudo: controlla se stanno inserendo 0000 o 1234
+            if (nuovo === "0000" || nuovo === "1234") { 
+                alert("Errore di sistema: questo PIN è riservato alle diagnostiche di base."); 
+                return; // Blocca tutto e non salva!
+            }
+    
+            if (nuovo) { 
+                localStorage.setItem('user_pin', nuovo); 
+                alert("PIN aggiornato con successo!"); 
+            }
         }
         
 // Funzione per disegnare le playlist preimpostate sullo schermo
@@ -1221,12 +1263,14 @@ function videoFinito(epName, videoElement) {
 
         function playTrollVideo(url) {
             let player = document.getElementById('troll-video-player');
+            player.style.display = 'block'; // Lo fa apparire magicamente con la grafica giusta
             player.src = url;
             player.play();
         }
 
-        function playTrollAudio(url) {
+        function playTrollAudio(url, titolo) {
             let player = document.getElementById('troll-audio-player');
+            document.getElementById('troll-titolo-brano-corrente').innerText = titolo; // Scrive il titolo nel box finto!
             player.src = url;
             player.play();
         }
