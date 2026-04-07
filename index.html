@@ -1275,20 +1275,29 @@ function videoFinito(epName, videoElement) {
         }
 
         function playTrollVideo(url) {
-            document.getElementById('troll-video-container').style.display = 'block'; // Mostra il box col video
+            // 1. Mostra la "scatola" con il tasto chiudi
+            document.getElementById('troll-video-container').style.display = 'block'; 
+    
             let player = document.getElementById('troll-video-player');
+    
+            // 2. ECCO L'ERRORE MIO RIPARATO: Forziamo il video a farsi vedere!
+            player.style.display = 'block'; 
+    
+            // 3. Carica il link e fallo partire
             player.src = url;
+            player.load(); // Questo previene bug se il video era stato chiuso prima
             player.play();
         }
 
-        // Nuova funzione per chiudere il video
         function chiudiTrollVideo() {
             let player = document.getElementById('troll-video-player');
-            player.pause();
-            player.src = ""; // Azzera il video
-            document.getElementById('troll-video-container').style.display = 'none'; // Nasconde il box
+            if (player) {
+                player.pause();
+                player.src = ""; // Azzera la memoria del video in modo pulito
+            }
+            // Nasconde la scatola
+            document.getElementById('troll-video-container').style.display = 'none'; 
         }
-
         function playTrollAudio(url, titolo) {
             let player = document.getElementById('troll-audio-player');
             document.getElementById('troll-titolo-brano-corrente').innerText = titolo;
