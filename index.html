@@ -214,7 +214,9 @@
 <div id="troll-video-section" style="display:none; padding: 10px; max-width: 500px; margin: auto;">
     <div class="top-bar">
         <button class="btn-tiny" onclick="alert('Accesso Negato: Modifica PIN disabilitata in Fase Alpha.')">⚙️ PIN</button>
+        <button class="btn-tiny" style="background:white;color:black" onclick="alert('Accesso Negato: Modifica Colore disabilitata in Fase Alpha.')">🎨 COLORE</button>
         <button onclick="apriTrollMusica()" style="padding: 5px 10px; background: #1DB954; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">🎵 Passa a Spotify</button>
+        <button class="btn-tiny" onclick="tornaAlBivioTroll()">🔙 MENU</button>
     </div>
 
     <div class="intro-box">
@@ -230,7 +232,7 @@
     </div>
     
     <div id="troll-episodes" class="episode-list" style="display: block;">
-        <div class="episode-item" onclick="playTrollVideo('https://res.cloudinary.com/dcsvok2jp/video/upload/v1775556094/aaaaaaaabaco_mktzcm.mp4')">
+        <div class="episode-item" onclick="playTrollVideo('LINK_AL_TUO_VIDEO_TROLL.mp4')">
             <div class="episode-content">
                 <div class="title-row">
                     <span class="ep-label">TEST 01</span>
@@ -240,20 +242,23 @@
         </div>
     </div>
 
-    <video id="troll-video-player" controls disableRemotePlayback style="width: 100%; border-radius: 12px; margin-top: 15px; background: #000; display: none;"></video>
+    <div id="troll-video-container" style="display: none; margin-top: 15px; text-align: right;">
+        <button onclick="chiudiTrollVideo()" style="background: #333; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-bottom: 5px; cursor: pointer; font-size: 12px;">❌ Chiudi Video</button>
+        <video id="troll-video-player" controls disableRemotePlayback style="width: 100%; border-radius: 12px; background: #000;"></video>
+    </div>
 </div>
 
 <div id="troll-musica-section" style="display:none; padding: 10px; max-width: 500px; margin: auto;">
     <div class="top-bar">
         <button class="btn-tiny" onclick="alert('Accesso Negato: Modifica PIN disabilitata in Fase Beta.')">⚙️ PIN</button>
-        <button class="btn-tiny" style="background:white;color:black">🎨 COLORE</button>
+        <button class="btn-tiny" style="background:white;color:black" onclick="alert('Accesso Negato: Modifica Colore disabilitata in Fase Beta.')">🎨 COLORE</button>
+        <button onclick="apriTrollVideo()" style="padding: 5px 10px; background: #e50914; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">🎬 Passa a Streaming</button>
+        <button class="btn-tiny" onclick="tornaAlBivioTroll()">🔙 MENU</button>
     </div>
 
     <div class="intro-box">
         <h2>🎵 Progetto Sonoro</h2>
         Archivio Sonoro Sperimentale - Fase Beta.
-        <br><br>
-        <button onclick="apriTrollVideo()" style="padding: 5px 10px; background: #e50914; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">🎬 Passa a Streaming</button>
     </div>
 
     <div class="intro-box" style="padding: 15px; border-radius: 18px; margin-bottom: 20px; text-align: center;">
@@ -261,7 +266,7 @@
         <audio id="troll-audio-player" controls disableRemotePlayback controlsList="nodownload noremoteplayback" style="width: 100%; outline: none; margin-bottom: 10px; height: 35px;"></audio>
     </div>
 
-    <div class="season-tab" onclick="playTrollAudio('https://res.cloudinary.com/dcsvok2jp/video/upload/v1773947050/audioclubz-audio-club-amapiano-319840_waa60j.mp3', 'Audio Test 01')">
+    <div class="season-tab" onclick="playTrollAudio('LINK_AL_TUO_AUDIO_TROLL.mp3', 'Frequenza di Test 01')">
         <div class="season-header">
             <span>▶️ Avvia Frequenza di Test 01</span>
         </div>
@@ -1241,19 +1246,27 @@ function videoFinito(epName, videoElement) {
 
 // --- FUNZIONI UNIVERSO TROLL ---
 
+        // --- FUNZIONI UNIVERSO TROLL ---
+
         function apriTrollVideo() {
+            document.getElementById('troll-audio-player').pause(); // Ferma la musica se suonava
+    
             document.getElementById('troll-bivio-section').style.display = 'none';
-            document.getElementById('troll-video-section').style.display = 'block';
+            document.getElementById('troll-musica-section').style.display = 'none'; // Spegne la musica
+            document.getElementById('troll-video-section').style.display = 'block'; // Accende il video
         }
 
         function apriTrollMusica() {
+            chiudiTrollVideo(); // Ferma e nasconde il video se suonava
+    
             document.getElementById('troll-bivio-section').style.display = 'none';
-            document.getElementById('troll-musica-section').style.display = 'block';
+            document.getElementById('troll-video-section').style.display = 'none'; // Spegne il video
+            document.getElementById('troll-musica-section').style.display = 'block'; // Accende la musica
         }
 
         function tornaAlBivioTroll() {
-    // Spegne tutto se torni indietro
-            document.getElementById('troll-video-player').pause();
+            // Spegne tutto se torni indietro al menù principale
+            chiudiTrollVideo();
             document.getElementById('troll-audio-player').pause();
     
             document.getElementById('troll-video-section').style.display = 'none';
@@ -1262,15 +1275,23 @@ function videoFinito(epName, videoElement) {
         }
 
         function playTrollVideo(url) {
+            document.getElementById('troll-video-container').style.display = 'block'; // Mostra il box col video
             let player = document.getElementById('troll-video-player');
-            player.style.display = 'block'; // Lo fa apparire magicamente con la grafica giusta
             player.src = url;
             player.play();
         }
 
+        // Nuova funzione per chiudere il video
+        function chiudiTrollVideo() {
+            let player = document.getElementById('troll-video-player');
+            player.pause();
+            player.src = ""; // Azzera il video
+            document.getElementById('troll-video-container').style.display = 'none'; // Nasconde il box
+        }
+
         function playTrollAudio(url, titolo) {
             let player = document.getElementById('troll-audio-player');
-            document.getElementById('troll-titolo-brano-corrente').innerText = titolo; // Scrive il titolo nel box finto!
+            document.getElementById('troll-titolo-brano-corrente').innerText = titolo;
             player.src = url;
             player.play();
         }
