@@ -616,63 +616,123 @@
         }
 
 function openVideo(el) {
-            const vTag = el.querySelector('video');
-            const isVis = vTag.style.display === 'block';
-            document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
-            if (!isVis) vTag.style.display = 'block';
+    const vTag = el.querySelector('video');
+    const isVis = vTag.style.display === 'block';
+
+    // Se stiamo per mostrare e avviare il video...
+    if (!isVis) {
+        // Nasconde e ferma tutti gli altri video aperti
+        document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
+        
+        vTag.style.display = 'block';
+        vTag.play().catch(e => console.log("Autoplay in pausa", e)); // Meglio forzare il play qui
+
+        // --- INIZIO INTEGRAZIONE MEDIA SESSION API ---
+        if ('mediaSession' in navigator) {
+            // Estrapoliamo il titolo per darlo al sistema operativo (es. "01x01 Gemma lucente")
+            const titleElement = el.querySelector('.title-it');
+            const epLabel = el.querySelector('.ep-label');
+            const titoloCompleto = (epLabel ? epLabel.innerText : "") + " " + (titleElement ? titleElement.innerText : "Episodio");
+
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: titoloCompleto, 
+                artist: 'il Grappolo', // Appare al posto di slorenzoreveglia-cmd.github.io
+                artwork: [
+                    { src: 'https://res.cloudinary.com/dcsvok2jp/image/upload/v1775217509/Logo_2_f2njec.png', sizes: '512x512', type: 'image/png' }
+                ]
+            });
+
+            // Tasti Play e Pause
+            navigator.mediaSession.setActionHandler('play', function() { vTag.play(); });
+            navigator.mediaSession.setActionHandler('pause', function() { vTag.pause(); });
+
+            // Tasto Traccia Precedente (cerca il div precedente e lo clicca)
+            navigator.mediaSession.setActionHandler('previoustrack', function() {
+                const prevItem = el.closest('.episode-item').previousElementSibling;
+                if (prevItem && prevItem.classList.contains('episode-item')) {
+                    const contentDiv = prevItem.querySelector('.episode-content');
+                    if (contentDiv) openVideo(contentDiv);
+                }
+            });
+
+            // Tasto Traccia Successiva (cerca il div successivo e lo clicca)
+            navigator.mediaSession.setActionHandler('nexttrack', function() {
+                const nextItem = el.closest('.episode-item').nextElementSibling;
+                if (nextItem && nextItem.classList.contains('episode-item')) {
+                    const contentDiv = nextItem.querySelector('.episode-content');
+                    if (contentDiv) openVideo(contentDiv);
+                }
+            });
         }
+        // --- FINE INTEGRAZIONE ---
+
+    } else {
+        // Se ci clicchi per chiuderlo
+        vTag.style.display = 'none';
+        vTag.pause();
+    }
+}
 
 function videoFinito(epName, videoElement) {
-            // 1. Mette la spunta automatica all'episodio appena finito
-            if (!watchedEpisodes.includes(epName)) {
-                watchedEpisodes.push(epName);
-                localStorage.setItem('watched_eps', JSON.stringify(watchedEpisodes));
-                
-                // Colora il quadratino subito
-                const currentItem = videoElement.closest('.episode-item');
-                const checkBox = currentItem.querySelector('.check-box');
-                if (checkBox) checkBox.classList.add('checked');
+    // 1. Mette la spunta automatica all'episodio appena finito
+    if (!watchedEpisodes.includes(epName)) {
+        watchedEpisodes.push(epName);
+        localStorage.setItem('watched_eps', JSON.stringify(watchedEpisodes));
+        
+        const currentItem = videoElement.closest('.episode-item');
+        const checkBox = currentItem.querySelector('.check-box');
+        if (checkBox) checkBox.classList.add('checked');
+    }
+
+    // 2. Cerca l'episodio/parte successiva
+    const currentItem = videoElement.closest('.episode-item');
+    const nextItem = currentItem.nextElementSibling;
+    
+    if (nextItem && nextItem.classList.contains('episode-item')) {
+        
+        // NOVITÀ: Controlliamo se eravamo in Full Screen O IN PIP (Picture in Picture)
+        const isFullScreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+        const isPiP = document.pictureInPictureElement === videoElement;
+
+        const nextContentDiv = nextItem.querySelector('.episode-content');
+        const nextVideo = nextItem.querySelector('video');
+
+        if (nextContentDiv && nextVideo) {
+            
+            // Usciamo dal fullscreen vecchio se serve
+            if (isFullScreen && document.exitFullscreen) {
+                document.exitFullscreen().catch(err => console.log(err));
+            } else if (isFullScreen && document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
             }
 
-            // 2. Cerca l'episodio/parte successiva
-            const currentItem = videoElement.closest('.episode-item');
-            const nextItem = currentItem.nextElementSibling;
+            // INVECE DI NASCONDERE E MOSTRARE A MANO, USIAMO LA NOSTRA FUNZIONE POTENZIATA!
+            // Assicuriamoci che parta da spento, così la openVideo lo riaccende bene
+            nextVideo.style.display = 'none'; 
             
-            if (nextItem && nextItem.classList.contains('episode-item')) {
-                
-                // NOVITÀ: Controlliamo se eravamo in Full Screen
-                const isFullScreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
-                
-                const nextVideo = nextItem.querySelector('video');
-                if (nextVideo) {
-                    
-                    // Se siamo in Full Screen, prima usciamo in modo pulito per non far impallare il browser
-                    if (isFullScreen && document.exitFullscreen) {
-                        document.exitFullscreen().catch(err => console.log(err));
-                    } else if (isFullScreen && document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    }
+            // Questo comando farà partire il nuovo video e aggiornerà i tasti/nomi di Windows!
+            openVideo(nextContentDiv); 
 
-                    // Nascondiamo i vecchi e mostriamo il nuovo
-                    document.querySelectorAll('video').forEach(v => { v.style.display='none'; v.pause(); });
-                    nextVideo.style.display = 'block';
-                    
-                    // Facciamo partire il video nuovo e poi tentiamo di rimetterlo in Full Screen
-                    nextVideo.play().then(() => {
-                        if (isFullScreen) {
-                            if (nextVideo.requestFullscreen) {
-                                nextVideo.requestFullscreen();
-                            } else if (nextVideo.webkitRequestFullscreen) {
-                                nextVideo.webkitRequestFullscreen();
-                            }
-                        }
-                    }).catch(e => console.log("Autoplay bloccato dal browser"));
-                }
-            } else {
-                // Se era l'ultimo video della lista, ricarica per aggiornare le percentuali a 100%
-                renderizzaStagioni();
+            // Se eravamo in FullScreen, lo rimettiamo
+            if (isFullScreen) {
+                nextVideo.play().then(() => {
+                    if (nextVideo.requestFullscreen) nextVideo.requestFullscreen();
+                    else if (nextVideo.webkitRequestFullscreen) nextVideo.webkitRequestFullscreen();
+                });
+            }
+            
+            // SE ERAVAMO IN PIP, CHIEDIAMO AL NUOVO VIDEO DI ENTRARE IN PIP!
+            if (isPiP && nextVideo.requestPictureInPicture) {
+                nextVideo.play().then(() => {
+                    nextVideo.requestPictureInPicture().catch(e => console.log("Impossibile avviare il nuovo PiP", e));
+                });
             }
         }
+    } else {
+        // Se era l'ultimo video della lista, ricarica per aggiornare le percentuali a 100%
+        renderizzaStagioni();
+    }
+}
 
         function checkPin() { 
             // Usiamo .trim() per evitare problemi con spazi vuoti invisibili
